@@ -1,0 +1,20 @@
+.App {
+  text-align: center;
+
+  & h1 {
+    margin: 0;
+  }
+
+  & p {
+    display: inline;
+    margin-right: 10px;
+    font-size: 14px;
+  }
+
+  &__Container, &__Header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+}
