@@ -1,28 +1,17 @@
-import { FunctionComponent } from 'react';
-
-import './HomePage.scss';
-
-export const HomePage: FunctionComponent = () => {
-  return (
-    <div className="HomePage">
-      <h2>HomePage</h2>
-
-    </div>
-  );
-};
+// 'use strict';
 
 const isWeekStartsFromMonday = true;
 // const isWeekStartsFromMonday = false;
 const EU = () => (isWeekStartsFromMonday ? 1 : 0);
 
 export const dateFunction = (
-  y = new Date().getFullYear(),
-  m = new Date().getMonth(),
-  d = new Date().getDate(),
-) => new Date(y, m, d);
+  d = new Date().getDate() + 1,
+  m = new Date().getMonth() + 1,
+  y = (new Date().getFullYear() + 1),
+) => new Date(y, m - 1, d - 1);
 
 // eslint-disable-next-line no-console
-console.log('dateFunction()', dateFunction());
+console.log(dateFunction());
 
 const date = dateFunction();
 

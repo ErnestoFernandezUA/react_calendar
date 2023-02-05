@@ -17,7 +17,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 // eslint-disable-next-line import/no-cycle
-import postsReducer from '../features/Posts/postsSlice';
+import postsReducer from './features/Posts/postsSlice';
 
 const rootReducer = combineReducers({
   posts: postsReducer,

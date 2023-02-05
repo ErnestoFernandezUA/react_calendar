@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { resetState, selectPosts } from '../../features/Posts/postsSlice';
+import { resetState, selectPosts } from '../../store/features/Posts/postsSlice';
 
 import './PostPage.scss';
 

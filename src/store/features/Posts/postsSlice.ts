@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAllPosts } from '../../api/post';
+import { getAllPosts } from '../../../api/post';
 // eslint-disable-next-line import/no-cycle
-import { RootState } from '../../store';
-import { Post } from '../../type/Post';
+import { RootState } from '../..';
+import { Post } from '../../../type/Post';
 
 export interface PostsState {
   storage: Post[];
