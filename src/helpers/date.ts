@@ -89,7 +89,8 @@ export function buildWeek() {
   let current = new Date(
     startCurrentWeek.getFullYear(),
     startCurrentWeek.getMonth(),
-    startCurrentWeek.getDate());
+    startCurrentWeek.getDate(),
+  );
 
   // week.push({ date: current, todos: []});
   let today = startCurrentWeek.getDate();

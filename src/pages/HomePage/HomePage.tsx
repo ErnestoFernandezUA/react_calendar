@@ -11,6 +11,26 @@ export const HomePage: FunctionComponent = () => {
   );
 };
 
+// function Calendar(isWeekStartsFromMonday: boolean) {
+//   this.isWeekStartsFromMonday = isWeekStartsFromMonday;
+
+//   // return {
+//   //   isWeekStartsFromMonday,
+
+//   //   setIsWeekStartsFromMonday: (value: boolean) => {
+//   //     return { isWeekStartsFromMonday: value };
+//   //   },
+
+//   //   getStartDay: () => {},
+//   //   getEndDay: () => {},
+//   // };
+// }
+
+// const calendar = new Calendar(true);
+
+// eslint-disable-next-line no-console
+// console.log('calendar() = ', calendar);
+
 const isWeekStartsFromMonday = true;
 // const isWeekStartsFromMonday = false;
 const EU = () => (isWeekStartsFromMonday ? 1 : 0);
@@ -100,7 +120,8 @@ export function buildWeek() {
   let current = new Date(
     startCurrentWeek.getFullYear(),
     startCurrentWeek.getMonth(),
-    startCurrentWeek.getDate());
+    startCurrentWeek.getDate(),
+  );
 
   // week.push({ date: current, todos: []});
   let today = startCurrentWeek.getDate();

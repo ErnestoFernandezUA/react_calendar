@@ -15,12 +15,14 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
 // eslint-disable-next-line import/no-cycle
 import postsReducer from './features/Posts/postsSlice';
+// eslint-disable-next-line import/no-cycle
+import intervalSlice from './features/Interval/intervalSlice';
 
 const rootReducer = combineReducers({
   posts: postsReducer,
+  interval: intervalSlice,
 });
 
 const persistConfig = {
