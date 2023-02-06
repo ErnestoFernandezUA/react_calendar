@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
@@ -63,7 +64,9 @@ const intervalSlice = createSlice({
     },
     setIntervalCalendar: (state: IntervalState) => {
       // eslint-disable-next-line no-console
-      console.log('setIntervalCalendar', state.formatCalendar);
+      console.log('setIntervalCalendar//',
+        'format calendar:', state.formatCalendar,
+        'current date:', new Date(state.currentDate).toDateString());
 
       if (!state.currentDate) {
         // eslint-disable-next-line no-console
@@ -85,30 +88,55 @@ const intervalSlice = createSlice({
             new Date(state.currentDate).getMonth(),
             new Date(state.currentDate).getDate() + 1,
           ).valueOf();
+
+          // eslint-disable-next-line no-console
+          console.log('day start', new Date(state.start).toString());
+          // eslint-disable-next-line no-console
+          console.log('day end', new Date(state.end).toString());
           break;
 
         case INTERVAL.WEEK:
+          const date = new Date(state.currentDate);
+          const dayOfWeek = date.getDay();
+          const daysToLastMonday = dayOfWeek === 1 ? 7 : dayOfWeek - 1 || 7;
+
           state.start = new Date(
-            new Date(state.currentDate).getFullYear(),
-            new Date(state.currentDate).getMonth(),
-            new Date(state.currentDate).getDate()
-            - new Date(state.currentDate).getDay()
-            + IS_MONDAY_FIRST_DAY_OF_WEEK,
+            date.getTime() - (daysToLastMonday
+              - IS_MONDAY_FIRST_DAY_OF_WEEK) * 24 * 60 * 60 * 1000,
           ).valueOf();
+
+          // eslint-disable-next-line no-console
+          console.log('value', new Date(
+            date.getTime() - daysToLastMonday * 24 * 60 * 60 * 1000,
+          ));
+
+          // state.start = new Date(
+          //   // new Date(state.currentDate).getFullYear(),
+          //   // new Date(state.currentDate).getMonth(),
+          //   // (new Date(state.currentDate).getDate()
+          //   // - new Date(state.currentDate).getDay()
+          //   // + IS_MONDAY_FIRST_DAY_OF_WEEK
+          //   // - 7) % 7,
+          //   new Date(state.currentDate).getTime()
+          //   - (new Date(state.currentDate).getUTCDay() === 1
+          //     ? 7 : new Date(state.currentDate).getUTCDay() - 1 || 7)
+          //     * 24 * 60 * 60 * 1000,
+          // ).valueOf();
 
           state.end = new Date(
             new Date(state.currentDate).getFullYear(),
             new Date(state.currentDate).getMonth(),
-            new Date(state.currentDate).getDate()
+            (new Date(state.currentDate).getDate()
             - new Date(state.currentDate).getDay()
             + IS_MONDAY_FIRST_DAY_OF_WEEK
-            + 7,
+            // eslint-disable-next-line no-mixed-operators
+            - 7) % 7 + 7,
           ).valueOf();
 
-          // // eslint-disable-next-line no-console
-          // console.log('week start', new Date(state.start).toString());
-          // // eslint-disable-next-line no-console
-          // console.log('week end', new Date(state.end).toString());
+          // eslint-disable-next-line no-console
+          console.log('week start', new Date(state.start).toString());
+          // eslint-disable-next-line no-console
+          console.log('week end', new Date(state.end).toString());
           break;
 
         case INTERVAL.MONTH:
@@ -156,9 +184,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          console.log('start year', new Date(state.start).toString());
+          // console.log('start year', new Date(state.start).toString());
           // eslint-disable-next-line no-console
-          console.log('end year', new Date(state.end).toString());
+          // console.log('end year', new Date(state.end).toString());
           break;
 
         default:
@@ -199,5 +227,10 @@ export const {
 export const selectTodos = (state: RootState) => state.interval.storage;
 export const selectCurrentDate
 = (state: RootState) => state.interval.currentDate;
+export const selectStartInterval
+= (state: RootState) => state.interval.start;
+export const selectEndInterval
+= (state: RootState) => state.interval.end;
+
 export const selectIntervalFormat
 = (state: RootState) => state.interval.formatCalendar;

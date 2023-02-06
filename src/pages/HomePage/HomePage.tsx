@@ -1,6 +1,10 @@
 import { FunctionComponent, useEffect } from 'react';
+import { List } from '../../components/List';
+import { buildInterval } from '../../helpers/buildInterval';
 import {
   selectCurrentDate,
+  selectEndInterval,
+  selectStartInterval,
   setCurrentDate,
   setFormat,
   setIntervalCalendar,
@@ -11,19 +15,26 @@ import { INTERVAL } from '../../type/format';
 
 import './HomePage.scss';
 
-localStorage.clear();
-
 export const HomePage: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
+  const start = useAppSelector(selectStartInterval);
+  const end = useAppSelector(selectEndInterval);
+
+  // eslint-disable-next-line no-console
+  console.log('start = ', new Date(start));
+  // eslint-disable-next-line no-console
+  console.log('end = ', new Date(end));
+
+  const interval = buildInterval(start, end);
 
   useEffect(() => {
     if (!currentDate) {
       dispatch(setCurrentDate());
     }
 
-    dispatch(setSpecialDate(new Date(2023, 0, 1).valueOf()));
-    dispatch(setFormat(INTERVAL.WEEK));
+    dispatch(setSpecialDate(new Date(2023, 2, 15).valueOf()));
+    dispatch(setFormat(INTERVAL.MONTH));
     dispatch(setIntervalCalendar());
   }, []);
 
@@ -31,6 +42,8 @@ export const HomePage: FunctionComponent = () => {
     <div className="HomePage">
       <h2>HomePage</h2>
       <p>{new Date(currentDate).toString()}</p>
+
+      <List interval={interval} />
 
     </div>
   );
