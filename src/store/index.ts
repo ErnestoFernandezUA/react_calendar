@@ -28,8 +28,8 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['posts'],
-  // blacklist: ['posts'],
+  whitelist: ['interval'],
+  // blacklist: ['interval'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
