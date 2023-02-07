@@ -11,9 +11,14 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { FormatKeys, FormatValue } from '../type/FormatType';
 
 const Wrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
-export const Header: FunctionComponent = () => {
+export const Controls: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
   const format = useAppSelector(selectFormat);

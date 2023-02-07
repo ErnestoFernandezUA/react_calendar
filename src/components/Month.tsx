@@ -1,12 +1,11 @@
 import { FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
-import { divideYear } from '../helpers/divideYear';
 import { selectFormat } from '../store/features/Interval/intervalSlice';
 import { useAppSelector } from '../store/hooks';
-import { DayComponent } from './Day';
+import { Day } from './Day';
 
-const YEAR = styled.div<{ format?: string, isWeekend?: boolean }>`
+const Wrapper = styled.div<{ format?: string, isWeekend?: boolean }>`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 
@@ -19,7 +18,7 @@ const YEAR = styled.div<{ format?: string, isWeekend?: boolean }>`
 
     if (format === FORMAT.YEAR) {
       return css`
-        grid-template-columns: repeat(3, 1fr);
+        max-width: 200px;
       `;
     }
 
@@ -41,21 +40,14 @@ interface ListProps {
   interval: number[];
 }
 
-export const List: FunctionComponent<ListProps> = ({ interval }) => {
+export const Month: FunctionComponent<ListProps> = ({ interval }) => {
   const format = useAppSelector(selectFormat);
-  const prepared = [];
-
-  if (format === FORMAT.YEAR) {
-    prepared.push(...divideYear(interval));
-  } else {
-    prepared.push(...interval);
-  }
 
   return (
-    <YEAR format={format}>
+    <Wrapper format={format}>
       {interval.map((day: number) => (
-        <DayComponent key={day} startDay={day} />
+        <Day key={day} startDay={day} />
       ))}
-    </YEAR>
+    </Wrapper>
   );
 };

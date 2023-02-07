@@ -1,5 +1,7 @@
 import { FunctionComponent, useEffect } from 'react';
-import { List } from '../../components/List';
+import styled from 'styled-components';
+
+import { Month } from '../../components/Month';
 import { buildInterval } from '../../helpers/buildInterval';
 import {
   selectCurrentDate,
@@ -13,7 +15,10 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { FORMAT } from '../../constants/FORMAT';
 
-import './HomePage.scss';
+const Wrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
 
 export const HomePage: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -33,8 +38,8 @@ export const HomePage: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className="HomePage">
-      <List interval={interval} />
-    </div>
+    <Wrapper>
+      <Month interval={interval} />
+    </Wrapper>
   );
 };
