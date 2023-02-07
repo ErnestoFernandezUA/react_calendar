@@ -1,8 +1,2 @@
-export type Interval = 'day' | 'week' | 'month' | 'year';
-
-export const INTERVAL: { [key: string]: Interval } = {
-  DAY: 'day',
-  WEEK: 'week',
-  MONTH: 'month',
-  YEAR: 'year',
-};
+export type FormatValue = 'day' | 'week' | 'month' | 'year';
+export type FormatKeys = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';

@@ -11,7 +11,7 @@ import {
   setSpecialDate,
 } from '../../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { INTERVAL } from '../../type/format';
+import { FORMAT } from '../../constants/FORMAT';
 
 import './HomePage.scss';
 
@@ -22,9 +22,9 @@ export const HomePage: FunctionComponent = () => {
   const end = useAppSelector(selectEndInterval);
 
   // eslint-disable-next-line no-console
-  console.log('start = ', new Date(start));
+  // console.log('start = ', new Date(start));
   // eslint-disable-next-line no-console
-  console.log('end = ', new Date(end));
+  // console.log('end = ', new Date(end));
 
   const interval = buildInterval(start, end);
 
@@ -33,15 +33,15 @@ export const HomePage: FunctionComponent = () => {
       dispatch(setCurrentDate());
     }
 
-    dispatch(setSpecialDate(new Date(2023, 2, 15).valueOf()));
-    dispatch(setFormat(INTERVAL.MONTH));
+    dispatch(setSpecialDate(new Date(2023, 2, 19).valueOf()));
+    dispatch(setFormat(FORMAT.WEEK));
     dispatch(setIntervalCalendar());
   }, []);
 
   return (
     <div className="HomePage">
       <h2>HomePage</h2>
-      <p>{new Date(currentDate).toString()}</p>
+      <p>{new Date(currentDate).toDateString()}</p>
 
       <List interval={interval} />
 

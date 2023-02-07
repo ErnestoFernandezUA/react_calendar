@@ -3,7 +3,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../..';
-import { INTERVAL, Interval } from '../../../type/format';
+import { FORMAT } from '../../../constants/FORMAT';
+import { FormatValue } from '../../../type/Format';
 import { Todo } from '../../../type/Todo';
 
 const IS_MONDAY_FIRST_DAY_OF_WEEK = 1;
@@ -14,7 +15,7 @@ export interface IntervalState {
   end: number;
 
   storage: Todo[];
-  formatCalendar: Interval;
+  formatCalendar: FormatValue;
 }
 
 const initialState: IntervalState = {
@@ -23,7 +24,7 @@ const initialState: IntervalState = {
   end: 0,
 
   storage: [],
-  formatCalendar: 'month',
+  formatCalendar: FORMAT.MONTH,
 };
 
 export const getIntervalAsync = createAsyncThunk(
@@ -58,7 +59,7 @@ const intervalSlice = createSlice({
     },
     setFormat: (
       state: IntervalState,
-      action: PayloadAction<Interval>,
+      action: PayloadAction<FormatValue>,
     ) => {
       state.formatCalendar = action.payload;
     },
@@ -76,7 +77,7 @@ const intervalSlice = createSlice({
       }
 
       switch (state.formatCalendar) {
-        case INTERVAL.DAY:
+        case FORMAT.DAY:
           state.start = new Date(
             new Date(state.currentDate).getFullYear(),
             new Date(state.currentDate).getMonth(),
@@ -95,51 +96,33 @@ const intervalSlice = createSlice({
           console.log('day end', new Date(state.end).toString());
           break;
 
-        case INTERVAL.WEEK:
-          const date = new Date(state.currentDate);
-          const dayOfWeek = date.getDay();
-          const daysToLastMonday = dayOfWeek === 1 ? 7 : dayOfWeek - 1 || 7;
+        case FORMAT.WEEK:
+          const date = new Date(state.currentDate).getDate();
+          const dayOfWeek = new Date(state.currentDate).getDay();
 
           state.start = new Date(
-            date.getTime() - (daysToLastMonday
-              - IS_MONDAY_FIRST_DAY_OF_WEEK) * 24 * 60 * 60 * 1000,
+            new Date(state.currentDate).getFullYear(),
+            new Date(state.currentDate).getMonth(),
+            dayOfWeek === 0
+              ? date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK - 7
+              : date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK,
           ).valueOf();
-
-          // eslint-disable-next-line no-console
-          console.log('value', new Date(
-            date.getTime() - daysToLastMonday * 24 * 60 * 60 * 1000,
-          ));
-
-          // state.start = new Date(
-          //   // new Date(state.currentDate).getFullYear(),
-          //   // new Date(state.currentDate).getMonth(),
-          //   // (new Date(state.currentDate).getDate()
-          //   // - new Date(state.currentDate).getDay()
-          //   // + IS_MONDAY_FIRST_DAY_OF_WEEK
-          //   // - 7) % 7,
-          //   new Date(state.currentDate).getTime()
-          //   - (new Date(state.currentDate).getUTCDay() === 1
-          //     ? 7 : new Date(state.currentDate).getUTCDay() - 1 || 7)
-          //     * 24 * 60 * 60 * 1000,
-          // ).valueOf();
 
           state.end = new Date(
             new Date(state.currentDate).getFullYear(),
             new Date(state.currentDate).getMonth(),
-            (new Date(state.currentDate).getDate()
-            - new Date(state.currentDate).getDay()
-            + IS_MONDAY_FIRST_DAY_OF_WEEK
-            // eslint-disable-next-line no-mixed-operators
-            - 7) % 7 + 7,
+            7 + dayOfWeek === 0
+              ? date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK - 7
+              : date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK,
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          console.log('week start', new Date(state.start).toString());
+          console.log('week start', new Date(state.start).toDateString());
           // eslint-disable-next-line no-console
-          console.log('week end', new Date(state.end).toString());
+          console.log('week end', new Date(state.end).toDateString());
           break;
 
-        case INTERVAL.MONTH:
+        case FORMAT.MONTH:
           state.start = new Date(
             new Date(state.currentDate).getFullYear(),
             new Date(state.currentDate).getMonth(),
@@ -170,7 +153,7 @@ const intervalSlice = createSlice({
 
           break;
 
-        case INTERVAL.YEAR:
+        case FORMAT.YEAR:
           state.start = new Date(
             new Date(state.currentDate).getFullYear(),
             0,
