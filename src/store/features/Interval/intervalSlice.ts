@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../..';
 import { FORMAT } from '../../../constants/FORMAT';
-import { FormatValue } from '../../../type/Format';
+import { FormatValue } from '../../../type/FormatType';
 import { Todo } from '../../../type/Todo';
 
 const IS_MONDAY_FIRST_DAY_OF_WEEK = 1;

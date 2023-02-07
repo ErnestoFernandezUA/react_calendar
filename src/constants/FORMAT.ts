@@ -1,4 +1,4 @@
-import { FormatKeys, FormatValue } from '../type/Format';
+import { FormatKeys, FormatValue } from '../type/FormatType';
 
 export const FORMAT: { [key in FormatKeys]: FormatValue } = {
   DAY: 'day',
