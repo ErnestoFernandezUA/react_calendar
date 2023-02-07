@@ -62,6 +62,9 @@ const intervalSlice = createSlice({
       action: PayloadAction<FormatValue>,
     ) => {
       state.formatCalendar = action.payload;
+
+      // eslint-disable-next-line no-console
+      console.log('setFormat', state.formatCalendar);
     },
     setIntervalCalendar: (state: IntervalState) => {
       // eslint-disable-next-line no-console
@@ -215,5 +218,5 @@ export const selectStartInterval
 export const selectEndInterval
 = (state: RootState) => state.interval.end;
 
-export const selectIntervalFormat
+export const selectFormat
 = (state: RootState) => state.interval.formatCalendar;

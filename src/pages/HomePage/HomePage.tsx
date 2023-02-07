@@ -40,11 +40,7 @@ export const HomePage: FunctionComponent = () => {
 
   return (
     <div className="HomePage">
-      <h2>HomePage</h2>
-      <p>{new Date(currentDate).toDateString()}</p>
-
       <List interval={interval} />
-
     </div>
   );
 };

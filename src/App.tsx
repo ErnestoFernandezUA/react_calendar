@@ -3,12 +3,14 @@ import { NotFound } from './pages/NotFound';
 import { HomePage } from './pages/HomePage/HomePage';
 import { PostPage } from './pages/PostPage/PostPage';
 import './App.scss';
+import { Header } from './components/Header';
 
 function App() {
   return (
     <div className="App">
       <header className="App__Header">
         <h1>Calendar</h1>
+        <Header />
       </header>
 
       <main className="App__Container">

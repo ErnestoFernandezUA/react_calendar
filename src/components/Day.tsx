@@ -1,26 +1,66 @@
 import { FunctionComponent } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { selectFormat } from '../store/features/Interval/intervalSlice';
+import { useAppSelector } from '../store/hooks';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{
+  format?: string,
+  isWeekend?: boolean,
+}>`
+  ${({ format }) => {
+    if (format === 'week') {
+      return css`
+      `;
+    }
 
-`;
+    return '';
+  }}
 
-const Attributes = styled.div`
+  ${({ isWeekend }) => {
+    if (isWeekend) {
+      return css`
+        background-color: #caead6;
+      `;
+    }
 
+    return '';
+  }}
 `;
 
 interface DayProps {
-  day: number;
+  startDay: number;
   // eslint-disable-next-line react/require-default-props
   // key?: number;
 }
 
-export const Day: FunctionComponent<DayProps> = ({ day: dayProps }) => {
+export const DayComponent: FunctionComponent<DayProps> = ({ startDay }) => {
+  const format = useAppSelector(selectFormat);
+  const dayString = new Date(startDay).toDateString();
+  const isWeekend = (new Date(startDay).getDay() === 0
+  || new Date(startDay).getDay() === 6);
+
+  if (format === 'year') {
+    return (
+      <Wrapper format={format} isWeekend={isWeekend}>
+        {new Date(startDay).getDate()}
+      </Wrapper>
+    );
+  }
+
+  if (format === 'week' || format === 'month') {
+    return (
+      <Wrapper format={format} isWeekend={isWeekend}>
+        {dayString}
+        {format}
+      </Wrapper>
+    );
+  }
+
   return (
-    <Wrapper>
-      <Attributes>
-        {new Date(dayProps).toDateString()}
-      </Attributes>
+    <Wrapper format={format} isWeekend={isWeekend}>
+      {dayString}
+
+      List of TODOS:
     </Wrapper>
   );
 };
