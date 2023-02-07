@@ -10,7 +10,6 @@ import {
   setCurrentDate,
   setFormat,
   setIntervalCalendar,
-  setSpecialDate,
 } from '../../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { FORMAT } from '../../constants/FORMAT';
@@ -30,10 +29,10 @@ export const HomePage: FunctionComponent = () => {
   useEffect(() => {
     if (!currentDate) {
       dispatch(setCurrentDate());
+      dispatch(setFormat(FORMAT.MONTH));
     }
 
-    dispatch(setSpecialDate(new Date(2023, 2, 19).valueOf()));
-    dispatch(setFormat(FORMAT.WEEK));
+    // dispatch(setSpecialDate(new Date(2023, 2, 19).valueOf()));
     dispatch(setIntervalCalendar());
   }, []);
 

@@ -1,10 +1,22 @@
 import { FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
-import { selectFormat } from '../store/features/Interval/intervalSlice';
-import { useAppSelector } from '../store/hooks';
+import {
+  selectCurrentDate,
+  selectFormat,
+  setIntervalCalendar,
+  setSpecialDate,
+} from '../store/features/Interval/intervalSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 
-const Wrapper = styled.div<{ format?: string, isWeekend?: boolean }>`
+type WrapperType = {
+  format?: string,
+  isWeekend?: boolean,
+  isNotCurrentMonth: boolean,
+  isCurrentDay: boolean;
+};
+
+const Wrapper = styled.div<WrapperType>`
   box-sizing: border-box;
   padding: 10px;
   font-size: 14px;
@@ -24,10 +36,22 @@ const Wrapper = styled.div<{ format?: string, isWeekend?: boolean }>`
     return '';
   }}
 
-  ${({ isWeekend }) => {
-    if (isWeekend) {
+
+
+  ${({ isNotCurrentMonth }) => {
+    if (isNotCurrentMonth) {
       return css`
-        background-color: #caead6;
+        opacity: 0.4;
+      `;
+    }
+
+    return '';
+  }}
+
+  ${({ isCurrentDay }) => {
+    if (isCurrentDay) {
+      return css`
+        background-color: #79c6c6;
       `;
     }
 
@@ -43,8 +67,17 @@ const DayTitle = styled.div`
   align-items: center;
 `;
 
-const DayOfWeek = styled.div`
+const DayOfWeek = styled.div<{ isWeekend: boolean }>`
+ ${({ isWeekend }) => {
+    if (isWeekend) {
+      return css`
+        color: #a16e73;
+        font-weight: bold;
+      `;
+    }
 
+    return '';
+  }}
 `;
 
 const DateString = styled.div`
@@ -64,30 +97,52 @@ const DayListTodos = styled.div<{ format?: string }>`
 
 interface DayProps {
   startDay: number;
-  // eslint-disable-next-line react/require-default-props
-  // key?: number;
 }
 
 const useDayHook = (value: number) => new Date(value).toDateString().split(' ');
 
+const useCurrentHook = (current: number, anyDay: number) => {
+  const isCurrentYear
+  = new Date(current).getFullYear() === new Date(anyDay).getFullYear();
+
+  const isCurrentMonth
+  = new Date(current).getMonth() === new Date(anyDay).getMonth()
+  && new Date(current).getFullYear() === new Date(anyDay).getFullYear();
+
+  const isCurrentDay
+   = new Date(current).getDate() === new Date(anyDay).getDate()
+   && new Date(current).getMonth() === new Date(anyDay).getMonth()
+   && new Date(current).getFullYear() === new Date(anyDay).getFullYear();
+
+  return [isCurrentDay, isCurrentMonth, isCurrentYear];
+};
+
 export const Day: FunctionComponent<DayProps> = ({ startDay }) => {
+  const dispatch = useAppDispatch();
+  const currentDate = useAppSelector(selectCurrentDate);
   const format = useAppSelector(selectFormat);
   const isWeekend = (new Date(startDay).getDay() === 0
   || new Date(startDay).getDay() === 6);
-
-  const [
-    dayOfWeek,
-    month,
-    day,
-    year,
-  ] = useDayHook(startDay);
+  const [dayOfWeek, month, day, year] = useDayHook(startDay);
+  const [isCurrentDay, isCurrentMonth] = useCurrentHook(currentDate, startDay);
 
   const isTodosToday = true;
 
+  const onClick = () => {
+    dispatch(setSpecialDate(startDay));
+    dispatch(setIntervalCalendar());
+  };
+
   return (
-    <Wrapper format={format} isWeekend={isWeekend}>
+    <Wrapper
+      format={format}
+      isWeekend={isWeekend}
+      isNotCurrentMonth={!isCurrentMonth}
+      isCurrentDay={isCurrentDay}
+      onClick={onClick}
+    >
       <DayTitle>
-        <DayOfWeek>
+        <DayOfWeek isWeekend={isWeekend}>
           {format !== FORMAT.YEAR && dayOfWeek}
         </DayOfWeek>
 

@@ -1,4 +1,7 @@
-import { FunctionComponent } from 'react';
+import {
+  FunctionComponent,
+  // useEffect,
+} from 'react';
 import styled from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
 import {
@@ -22,6 +25,10 @@ export const Controls: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
   const format = useAppSelector(selectFormat);
+
+  // useEffect(() => {
+
+  // }, [format]);
 
   const onChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     const formatValue = e.target.value as FormatValue;
