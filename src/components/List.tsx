@@ -1,22 +1,24 @@
 import { FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
+import { FORMAT } from '../constants/FORMAT';
 import { selectFormat } from '../store/features/Interval/intervalSlice';
 import { useAppSelector } from '../store/hooks';
 import { DayComponent } from './Day';
-
-// const Wrapper = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(7, 1fr);
-// `;
 
 const Wrapper = styled.div<{ format?: string, isWeekend?: boolean }>`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 
   ${({ format }) => {
-    if (format === 'day') {
+    if (format === FORMAT.DAY) {
       return css`
         display: block;
+      `;
+    }
+
+    if (format === FORMAT.YEAR) {
+      return css`
+        grid-template-columns: repeat(3, 1fr);
       `;
     }
 

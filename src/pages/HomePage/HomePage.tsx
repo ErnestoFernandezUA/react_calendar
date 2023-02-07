@@ -20,12 +20,6 @@ export const HomePage: FunctionComponent = () => {
   const currentDate = useAppSelector(selectCurrentDate);
   const start = useAppSelector(selectStartInterval);
   const end = useAppSelector(selectEndInterval);
-
-  // eslint-disable-next-line no-console
-  // console.log('start = ', new Date(start));
-  // eslint-disable-next-line no-console
-  // console.log('end = ', new Date(end));
-
   const interval = buildInterval(start, end);
 
   useEffect(() => {
