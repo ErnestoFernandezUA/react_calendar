@@ -114,10 +114,9 @@ const intervalSlice = createSlice({
           state.end = new Date(
             new Date(state.currentDate).getFullYear(),
             new Date(state.currentDate).getMonth(),
-            dayOfWeek === 0
+            (dayOfWeek === 0
               ? date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK - 7
-              : date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK
-            + 7,
+              : date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK) + 7,
           ).valueOf();
 
           // eslint-disable-next-line no-console
