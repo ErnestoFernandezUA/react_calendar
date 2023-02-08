@@ -15,6 +15,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { FORMAT } from '../../constants/FORMAT';
 import { Year } from '../../components/Year';
+import { Day } from '../../components/Day';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -47,11 +48,10 @@ export const HomePage: FunctionComponent = () => {
 
   return (
     <Wrapper>
-      {format === FORMAT.YEAR ? (
-        <Year interval={interval} />
-      ) : (
-        <Month interval={interval} />
-      )}
+      {format === FORMAT.YEAR && <Year interval={interval} />}
+      {(format === FORMAT.MONTH || format === FORMAT.WEEK)
+      && <Month interval={interval} />}
+      {format === FORMAT.DAY && <Day startDay={interval[0]} />}
     </Wrapper>
   );
 };

@@ -1,9 +1,13 @@
-import { FunctionComponent } from 'react';
+import {
+  FunctionComponent,
+  // useEffect,
+} from 'react';
 import styled, { css } from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
 import {
   selectCurrentDate,
   selectFormat,
+  setFormat,
   setIntervalCalendar,
   setSpecialDate,
 } from '../store/features/Interval/intervalSlice';
@@ -101,7 +105,7 @@ const useCurrentHook = (current: number, anyDay: number) => {
    && new Date(current).getMonth() === new Date(anyDay).getMonth()
    && new Date(current).getFullYear() === new Date(anyDay).getFullYear();
 
-  return [isCurrentDay, isCurrentMonth, isCurrentYear];
+  return { isCurrentDay, isCurrentMonth, isCurrentYear };
 };
 
 export const Day: FunctionComponent<DayProps> = ({
@@ -114,11 +118,28 @@ export const Day: FunctionComponent<DayProps> = ({
   const isWeekend = (new Date(startDay).getDay() === 0
   || new Date(startDay).getDay() === 6);
   const [dayOfWeek, month, day, year] = useDayHook(startDay);
-  const [isCurrentDay, isCurrentMonth] = useCurrentHook(currentDate, startDay);
+  const {
+    isCurrentDay,
+    isCurrentMonth,
+  } = useCurrentHook(currentDate, startDay);
 
   const isTodosToday = true;
 
-  const onClick = () => {
+  const onDayClick = () => {
+    // eslint-disable-next-line no-console
+    console.log('Day onClick');
+
+    if (isCurrentDay && format === FORMAT.DAY) {
+      return;
+    }
+
+    if (isCurrentDay) {
+      dispatch(setFormat(FORMAT.DAY));
+      dispatch(setIntervalCalendar());
+
+      return;
+    }
+
     if (!disabled) {
       dispatch(setSpecialDate(startDay));
     }
@@ -140,14 +161,15 @@ export const Day: FunctionComponent<DayProps> = ({
       isWeekend={isWeekend}
       isNotCurrentMonth={!isCurrentMonth}
       isCurrentDay={isCurrentDay}
-      onClick={onClick}
     >
       <DayTitle>
         <DayOfWeek isWeekend={isWeekend}>
           {format !== FORMAT.YEAR && dayOfWeek}
         </DayOfWeek>
 
-        <DateString>
+        <DateString
+          onClick={onDayClick}
+        >
           {format === FORMAT.DAY ? `${day}/${month}/${year}` : day}
         </DateString>
       </DayTitle>

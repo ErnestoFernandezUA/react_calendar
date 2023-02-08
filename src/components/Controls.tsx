@@ -20,6 +20,10 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
+const Back = styled.div<{ format: string }>`
+  cursor: pointer;
+`;
+
 export const Controls: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
@@ -28,18 +32,29 @@ export const Controls: FunctionComponent = () => {
   const onChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     const formatValue = e.target.value as FormatValue;
 
-    // eslint-disable-next-line no-console
-    // console.log('Control onChange//', formatValue);
-
     dispatch(setFormat(formatValue));
     dispatch(setIntervalCalendar());
   };
 
+  const onGoToPrevFormat = () => {
+    // eslint-disable-next-line no-console
+    console.log('onGoToPrevFormat');
+  };
+
+  // eslint-disable-next-line no-console
+  console.log('Control/ format ---------------', format);
+
   return (
     <Wrapper>
-      <p>{new Date(currentDate).toDateString()}</p>
+      <Back
+        format={format}
+        onClick={onGoToPrevFormat}
+      >
+        {new Date(currentDate).toDateString()}
+      </Back>
 
       <select
+        value={format}
         defaultValue={format}
         onChange={onChange}
       >

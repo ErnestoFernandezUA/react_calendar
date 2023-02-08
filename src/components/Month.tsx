@@ -61,6 +61,9 @@ export const Month: FunctionComponent<MonthProps> = ({ interval }) => {
     empty.push(-i);
   }
 
+  // eslint-disable-next-line no-console
+  console.log('render month');
+
   return (
     <Wrapper format={format}>
       <MonthTitle format={format}>{MONTH_NAMES[monthName.current]}</MonthTitle>
