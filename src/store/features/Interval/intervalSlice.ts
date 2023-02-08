@@ -114,9 +114,10 @@ const intervalSlice = createSlice({
           state.end = new Date(
             new Date(state.currentDate).getFullYear(),
             new Date(state.currentDate).getMonth(),
-            7 + dayOfWeek === 0
+            dayOfWeek === 0
               ? date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK - 7
-              : date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK,
+              : date - dayOfWeek + IS_MONDAY_FIRST_DAY_OF_WEEK
+            + 7,
           ).valueOf();
 
           // eslint-disable-next-line no-console
@@ -150,9 +151,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          // console.log('start month', new Date(state.start).toString());
+          console.log('start month', new Date(state.start).toString());
           // eslint-disable-next-line no-console
-          // console.log('end month', new Date(state.end).toString());
+          console.log('end month', new Date(state.end).toString());
 
           break;
 
@@ -170,9 +171,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          // console.log('start year', new Date(state.start).toString());
+          console.log('start year', new Date(state.start).toString());
           // eslint-disable-next-line no-console
-          // console.log('end year', new Date(state.end).toString());
+          console.log('end year', new Date(state.end).toString());
           break;
 
         default:

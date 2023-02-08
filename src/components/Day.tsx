@@ -130,7 +130,9 @@ export const Day: FunctionComponent<DayProps> = ({ startDay }) => {
 
   const onClick = () => {
     dispatch(setSpecialDate(startDay));
-    dispatch(setIntervalCalendar());
+    if (!isCurrentMonth) {
+      dispatch(setIntervalCalendar());
+    }
   };
 
   return (

@@ -33,6 +33,9 @@ export const Controls: FunctionComponent = () => {
   const onChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     const formatValue = e.target.value as FormatValue;
 
+    // eslint-disable-next-line no-console
+    console.log('Control onChange//', formatValue);
+
     dispatch(setFormat(formatValue));
     dispatch(setIntervalCalendar());
   };

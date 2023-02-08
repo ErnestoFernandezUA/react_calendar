@@ -36,6 +36,12 @@ export const HomePage: FunctionComponent = () => {
     dispatch(setIntervalCalendar());
   }, []);
 
+  // eslint-disable-next-line no-console
+  // console.log('HomePage//',
+  //   new Date(start).toDateString(),
+  //   '-----------',
+  //   new Date(end).toDateString());
+
   return (
     <Wrapper>
       <Month interval={interval} />
