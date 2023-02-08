@@ -7,7 +7,7 @@ import { FORMAT } from '../../../constants/FORMAT';
 import { FormatValue } from '../../../type/FormatType';
 import { Todo } from '../../../type/Todo';
 
-const IS_MONDAY_FIRST_DAY_OF_WEEK = 1;
+export const IS_MONDAY_FIRST_DAY_OF_WEEK = 1;
 
 export interface IntervalState {
   currentDate: number;

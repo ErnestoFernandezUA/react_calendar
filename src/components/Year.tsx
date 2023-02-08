@@ -6,7 +6,8 @@ import { Month } from './Month';
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 2rem;
+  min-width: 1100px;
 `;
 
 interface YearProps {

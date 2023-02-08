@@ -22,42 +22,28 @@ const Wrapper = styled.div<WrapperType>`
   font-size: 14px;
   cursor: pointer;
 
-  ${({ format }) => {
-    if (format === FORMAT.WEEK || format === FORMAT.MONTH) {
-      return css`
-        height: 200px;
-      `;
-    }
+  ${({ format }) => (format === FORMAT.DAY) && css`
+    height: 100vh;
+  `}
 
-    if (format === FORMAT.YEAR) {
-      return css`
-      `;
-    }
+  ${({ format }) => (format === FORMAT.WEEK || format === FORMAT.MONTH) && css`
+    height: 200px;
+  `}
 
-    return '';
-  }}
+  ${({ format, isWeekend }) => (format === FORMAT.YEAR && isWeekend) && css`
+    color: red;
+  `}
 
 
 
-  ${({ isNotCurrentMonth }) => {
-    if (isNotCurrentMonth) {
-      return css`
-        opacity: 0.4;
-      `;
-    }
+  ${({ isNotCurrentMonth }) => isNotCurrentMonth && css`
+    opacity: 0.4;
+  `}
 
-    return '';
-  }}
+  ${({ isCurrentDay }) => isCurrentDay && css`
+    background-color: #79c6c6;
+  `}
 
-  ${({ isCurrentDay }) => {
-    if (isCurrentDay) {
-      return css`
-        background-color: #79c6c6;
-      `;
-    }
-
-    return '';
-  }}
 `;
 
 const DayTitle = styled.div`
@@ -98,6 +84,8 @@ const DayListTodos = styled.div<{ format?: string }>`
 
 interface DayProps {
   startDay: number;
+  // eslint-disable-next-line react/require-default-props
+  disabled?: boolean;
 }
 
 const useDayHook = (value: number) => new Date(value).toDateString().split(' ');
@@ -118,7 +106,10 @@ const useCurrentHook = (current: number, anyDay: number) => {
   return [isCurrentDay, isCurrentMonth, isCurrentYear];
 };
 
-export const Day: FunctionComponent<DayProps> = ({ startDay }) => {
+export const Day: FunctionComponent<DayProps> = ({
+  startDay,
+  disabled = false,
+}) => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
   const format = useAppSelector(selectFormat);
@@ -130,11 +121,20 @@ export const Day: FunctionComponent<DayProps> = ({ startDay }) => {
   const isTodosToday = true;
 
   const onClick = () => {
-    dispatch(setSpecialDate(startDay));
-    if (!isCurrentMonth) {
+    if (!disabled) {
+      dispatch(setSpecialDate(startDay));
+    }
+
+    if (!disabled && !isCurrentMonth) {
       dispatch(setIntervalCalendar());
     }
   };
+
+  if (disabled) {
+    return (
+      <div />
+    );
+  }
 
   return (
     <Wrapper
