@@ -34,8 +34,6 @@ const Wrapper = styled.div<WrapperType>`
     color: red;
   `}
 
-
-
   ${({ isNotCurrentMonth }) => isNotCurrentMonth && css`
     opacity: 0.4;
   `}
