@@ -6,6 +6,7 @@ import { buildInterval } from '../../helpers/buildInterval';
 import {
   selectCurrentDate,
   selectEndInterval,
+  selectFormat,
   selectStartInterval,
   setCurrentDate,
   setFormat,
@@ -13,6 +14,7 @@ import {
 } from '../../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { FORMAT } from '../../constants/FORMAT';
+import { Year } from '../../components/Year';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -25,6 +27,7 @@ export const HomePage: FunctionComponent = () => {
   const start = useAppSelector(selectStartInterval);
   const end = useAppSelector(selectEndInterval);
   const interval = buildInterval(start, end);
+  const format = useAppSelector(selectFormat);
 
   useEffect(() => {
     if (!currentDate) {
@@ -44,7 +47,11 @@ export const HomePage: FunctionComponent = () => {
 
   return (
     <Wrapper>
-      <Month interval={interval} />
+      {format === FORMAT.YEAR ? (
+        <Year interval={interval} />
+      ) : (
+        <Month interval={interval} />
+      )}
     </Wrapper>
   );
 };

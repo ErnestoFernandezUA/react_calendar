@@ -20,6 +20,7 @@ const Wrapper = styled.div<WrapperType>`
   box-sizing: border-box;
   padding: 10px;
   font-size: 14px;
+  cursor: pointer;
 
   ${({ format }) => {
     if (format === FORMAT.WEEK || format === FORMAT.MONTH) {

@@ -36,11 +36,11 @@ const Wrapper = styled.div<{ format?: string, isWeekend?: boolean }>`
   }}
 `;
 
-interface ListProps {
+interface MonthProps {
   interval: number[];
 }
 
-export const Month: FunctionComponent<ListProps> = ({ interval }) => {
+export const Month: FunctionComponent<MonthProps> = ({ interval }) => {
   const format = useAppSelector(selectFormat);
 
   return (

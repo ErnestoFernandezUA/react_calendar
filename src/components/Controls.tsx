@@ -1,6 +1,5 @@
 import {
   FunctionComponent,
-  // useEffect,
 } from 'react';
 import styled from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
@@ -26,15 +25,11 @@ export const Controls: FunctionComponent = () => {
   const currentDate = useAppSelector(selectCurrentDate);
   const format = useAppSelector(selectFormat);
 
-  // useEffect(() => {
-
-  // }, [format]);
-
   const onChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     const formatValue = e.target.value as FormatValue;
 
     // eslint-disable-next-line no-console
-    console.log('Control onChange//', formatValue);
+    // console.log('Control onChange//', formatValue);
 
     dispatch(setFormat(formatValue));
     dispatch(setIntervalCalendar());
