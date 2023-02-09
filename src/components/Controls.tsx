@@ -6,6 +6,7 @@ import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
 import {
   navigateMonth,
+  navigateYear,
   selectCurrentDate,
   selectFormat,
   setFormat,
@@ -68,7 +69,14 @@ export const Controls: FunctionComponent = () => {
   };
 
   const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    dispatch(navigateMonth(e.currentTarget.value));
+    if (format !== FORMAT.YEAR) {
+      dispatch(navigateMonth(e.currentTarget.value));
+    }
+
+    if (format === FORMAT.YEAR) {
+      dispatch(navigateYear(e.currentTarget.value));
+    }
+
     dispatch(setIntervalCalendar());
   };
 
@@ -109,8 +117,12 @@ export const Controls: FunctionComponent = () => {
         >
           Prev
         </button>
-        &nbsp;
-        {fullNameMonth}
+        {format !== FORMAT.YEAR && (
+          <>
+            &nbsp;
+            {fullNameMonth}
+          </>
+        )}
         &nbsp;
         {fullYear}
         &nbsp;

@@ -82,7 +82,7 @@ const intervalSlice = createSlice({
       action: PayloadAction<string>,
     ) => {
       // eslint-disable-next-line no-console
-      console.log('navigateMonth', action.payload);
+      console.log('navigateYear', action.payload);
 
       state.currentDate = new Date(
         new Date(state.currentDate).getFullYear()
@@ -234,6 +234,7 @@ export const {
   setSpecialDate,
   setFormat,
   navigateMonth,
+  navigateYear,
   setIntervalCalendar,
   addTodo,
   resetState,

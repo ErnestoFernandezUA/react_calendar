@@ -1,4 +1,7 @@
-import { FunctionComponent, useRef } from 'react';
+import {
+  FunctionComponent,
+  // useRef,
+} from 'react';
 import styled from 'styled-components';
 import { divideYear } from '../helpers/divideYear';
 import { Month } from './Month';
@@ -15,11 +18,11 @@ interface YearProps {
 }
 
 export const Year: FunctionComponent<YearProps> = ({ interval }) => {
-  const prepared = useRef(divideYear(interval));
+  const prepared = divideYear(interval);
 
   return (
     <Wrapper>
-      {prepared.current.map((month: number[]) => (
+      {prepared.map((month: number[]) => (
         <Month key={month[0]} interval={month} />
       ))}
     </Wrapper>
