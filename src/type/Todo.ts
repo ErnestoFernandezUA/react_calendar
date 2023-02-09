@@ -1,8 +1,9 @@
+type Color = 'red' | 'green' | 'blue';
+
 export type Todo = {
   todoId: string;
-  versions: {
-    createdAt: Date;
-    title: string;
-    description?: string;
-  }[];
+  title: string;
+  description?: string;
+  color?: Color;
+  createdAt: Date;
 };

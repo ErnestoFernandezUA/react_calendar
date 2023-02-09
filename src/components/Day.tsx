@@ -61,6 +61,10 @@ const DayTitle = styled.div<{ isCurrentDay: boolean }>`
   ${({ isCurrentDay }) => isCurrentDay && css`
     background-color: #79c6c6;
   `}
+
+  &:hover {
+    background-color: #e6e6e6;
+  }
 `;
 
 const DayOfWeek = styled.button<{ isWeekend: boolean }>`

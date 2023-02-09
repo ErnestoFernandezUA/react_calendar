@@ -2,6 +2,8 @@ import {
   FunctionComponent,
 } from 'react';
 import styled from 'styled-components';
+import { IoCaretBackOutline, IoCaretForwardOutline } from 'react-icons/io5';
+
 import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
 import {
@@ -13,6 +15,7 @@ import {
   setIntervalCalendar,
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { DatePicker } from './DatePicker';
 // import { FormatKeys, FormatValue } from '../type/FormatType';
 
 const Wrapper = styled.div`
@@ -28,6 +31,18 @@ const Back = styled.div<{ format: string }>`
 `;
 
 const ControlsNavigate = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ControlsArrow = styled.button`
+  border: none;
+  background-color: transparent;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 export const Controls: FunctionComponent = () => {
@@ -110,13 +125,13 @@ export const Controls: FunctionComponent = () => {
       </select> */}
 
       <ControlsNavigate>
-        <button
+        <ControlsArrow
           type="button"
           value="-1"
           onClick={onNavigateHandler}
         >
-          Prev
-        </button>
+          <IoCaretBackOutline />
+        </ControlsArrow>
         {format !== FORMAT.YEAR && (
           <>
             &nbsp;
@@ -126,14 +141,16 @@ export const Controls: FunctionComponent = () => {
         &nbsp;
         {fullYear}
         &nbsp;
-        <button
+        <ControlsArrow
           type="button"
           value="1"
           onClick={onNavigateHandler}
         >
-          Next
-        </button>
+          <IoCaretForwardOutline />
+        </ControlsArrow>
       </ControlsNavigate>
+
+      <DatePicker />
     </Wrapper>
   );
 };
