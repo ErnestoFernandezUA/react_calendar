@@ -2,13 +2,13 @@ import {
   FunctionComponent,
 } from 'react';
 import styled from 'styled-components';
-import { IoCaretBackOutline, IoCaretForwardOutline } from 'react-icons/io5';
+// import { IoCaretBackOutline, IoCaretForwardOutline } from 'react-icons/io5';
 
 import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
 import {
-  navigateMonth,
-  navigateYear,
+  // navigateMonth,
+  // navigateYear,
   selectCurrentDate,
   selectFormat,
   setFormat,
@@ -36,14 +36,14 @@ const ControlsNavigate = styled.div`
   align-items: center;
 `;
 
-const ControlsArrow = styled.button`
-  border: none;
-  background-color: transparent;
-  outline: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
+// const ControlsArrow = styled.button`
+//   border: none;
+//   background-color: transparent;
+//   outline: none;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+// `;
 
 export const Controls: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -83,17 +83,17 @@ export const Controls: FunctionComponent = () => {
     dispatch(setIntervalCalendar());
   };
 
-  const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (format !== FORMAT.YEAR) {
-      dispatch(navigateMonth(e.currentTarget.value));
-    }
+  // const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   if (format !== FORMAT.YEAR) {
+  //     dispatch(navigateMonth(e.currentTarget.value));
+  //   }
 
-    if (format === FORMAT.YEAR) {
-      dispatch(navigateYear(e.currentTarget.value));
-    }
+  //   if (format === FORMAT.YEAR) {
+  //     dispatch(navigateYear(e.currentTarget.value));
+  //   }
 
-    dispatch(setIntervalCalendar());
-  };
+  //   dispatch(setIntervalCalendar());
+  // };
 
   return (
     <Wrapper>
@@ -125,7 +125,7 @@ export const Controls: FunctionComponent = () => {
       </select> */}
 
       <ControlsNavigate>
-        <ControlsArrow
+        {/* <ControlsArrow
           type="button"
           value="-1"
           onClick={onNavigateHandler}
@@ -147,10 +147,10 @@ export const Controls: FunctionComponent = () => {
           onClick={onNavigateHandler}
         >
           <IoCaretForwardOutline />
-        </ControlsArrow>
+        </ControlsArrow> */}
+        <DatePicker />
       </ControlsNavigate>
 
-      <DatePicker />
     </Wrapper>
   );
 };

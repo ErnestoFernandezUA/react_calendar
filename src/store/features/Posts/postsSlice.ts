@@ -27,7 +27,7 @@ export const getPostsAsync = createAsyncThunk('posts/fetchPosts', async () => {
 });
 
 const postsSlice = createSlice({
-  name: 'post',
+  name: 'interval',
   initialState,
   reducers: {
     addPosts: (state: PostsState, action: PayloadAction<Post[]>) => {

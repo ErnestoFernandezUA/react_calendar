@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../..';
 import { FORMAT } from '../../../constants/FORMAT';
-import { FormatValue } from '../../../type/FormatType';
+import { FormatValue } from '../../../type/Format';
 import { Todo } from '../../../type/Todo';
 
 export const IS_MONDAY_FIRST_DAY_OF_WEEK = 1;
@@ -40,7 +40,7 @@ export const getIntervalAsync = createAsyncThunk(
 );
 
 const intervalSlice = createSlice({
-  name: 'post',
+  name: 'interval',
   initialState,
   reducers: {
     setCurrentDate: (

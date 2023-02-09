@@ -12,3 +12,18 @@ export const MONTH_NAMES = [
   'November',
   'December',
 ];
+
+export const MONTH_NAMES_CUT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
