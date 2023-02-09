@@ -25,6 +25,9 @@ const Back = styled.div<{ format: string }>`
   cursor: pointer;
 `;
 
+const ControlsNavigate = styled.div`
+`;
+
 export const Controls: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
@@ -42,6 +45,10 @@ export const Controls: FunctionComponent = () => {
   const onGoToPrevFormat = () => {
     // eslint-disable-next-line no-console
     console.log('onGoToPrevFormat');
+
+    if (format === FORMAT.YEAR) {
+      return;
+    }
 
     switch (format) {
       case FORMAT.DAY:
@@ -67,7 +74,7 @@ export const Controls: FunctionComponent = () => {
       >
         {/* {new Date(currentDate).toDateString()} */}
         {(format === FORMAT.DAY || format === FORMAT.WEEK) && fullNameMonth}
-        {format === FORMAT.MONTH && fullYear}
+        {(format === FORMAT.MONTH || format === FORMAT.YEAR) && fullYear}
       </Back>
 
       {/* <select
@@ -87,6 +94,10 @@ export const Controls: FunctionComponent = () => {
           );
         })}
       </select> */}
+
+      <ControlsNavigate>
+        {}
+      </ControlsNavigate>
     </Wrapper>
   );
 };
