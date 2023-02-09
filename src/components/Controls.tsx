@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
 import {
+  navigateMonth,
   selectCurrentDate,
   selectFormat,
   setFormat,
@@ -66,6 +67,11 @@ export const Controls: FunctionComponent = () => {
     dispatch(setIntervalCalendar());
   };
 
+  const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    dispatch(navigateMonth(e.currentTarget.value));
+    dispatch(setIntervalCalendar());
+  };
+
   return (
     <Wrapper>
       <Back
@@ -96,7 +102,25 @@ export const Controls: FunctionComponent = () => {
       </select> */}
 
       <ControlsNavigate>
-        {}
+        <button
+          type="button"
+          value="-1"
+          onClick={onNavigateHandler}
+        >
+          Prev
+        </button>
+        &nbsp;
+        {fullNameMonth}
+        &nbsp;
+        {fullYear}
+        &nbsp;
+        <button
+          type="button"
+          value="1"
+          onClick={onNavigateHandler}
+        >
+          Next
+        </button>
       </ControlsNavigate>
     </Wrapper>
   );

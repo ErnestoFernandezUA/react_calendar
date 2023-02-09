@@ -54,9 +54,6 @@ const intervalSlice = createSlice({
     ) => {
       state.currentDate = new Date(action.payload).valueOf();
     },
-    addTodo: (state: IntervalState, action: PayloadAction<Todo>) => {
-      state.storage.push(action.payload);
-    },
     setFormat: (
       state: IntervalState,
       action: PayloadAction<FormatValue>,
@@ -65,6 +62,34 @@ const intervalSlice = createSlice({
 
       // eslint-disable-next-line no-console
       console.log('setFormat', state.formatCalendar);
+    },
+    navigateMonth: (
+      state: IntervalState,
+      action: PayloadAction<string>,
+    ) => {
+      // eslint-disable-next-line no-console
+      console.log('navigateMonth', action.payload);
+
+      state.currentDate = new Date(
+        new Date(state.currentDate).getFullYear(),
+        new Date(state.currentDate).getMonth()
+        + Number(action.payload),
+        new Date(state.currentDate).getDate(),
+      ).valueOf();
+    },
+    navigateYear: (
+      state: IntervalState,
+      action: PayloadAction<string>,
+    ) => {
+      // eslint-disable-next-line no-console
+      console.log('navigateMonth', action.payload);
+
+      state.currentDate = new Date(
+        new Date(state.currentDate).getFullYear()
+        + Number(action.payload),
+        new Date(state.currentDate).getMonth(),
+        new Date(state.currentDate).getDate(),
+      ).valueOf();
     },
     setIntervalCalendar: (state: IntervalState) => {
       // eslint-disable-next-line no-console
@@ -178,6 +203,9 @@ const intervalSlice = createSlice({
         default:
       }
     },
+    addTodo: (state: IntervalState, action: PayloadAction<Todo>) => {
+      state.storage.push(action.payload);
+    },
     resetState: (state: IntervalState) => {
       return { ...state, ...initialState };
     },
@@ -205,6 +233,7 @@ export const {
   setCurrentDate,
   setSpecialDate,
   setFormat,
+  navigateMonth,
   setIntervalCalendar,
   addTodo,
   resetState,
