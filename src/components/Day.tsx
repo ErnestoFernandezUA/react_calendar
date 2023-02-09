@@ -44,13 +44,11 @@ const Wrapper = styled.div<WrapperType>`
     opacity: 0.4;
   `}
 
-  ${({ isCurrentDay }) => isCurrentDay && css`
-    background-color: #79c6c6;
-  `}
+
 
 `;
 
-const DayTitle = styled.div`
+const DayTitle = styled.div<{ isCurrentDay: boolean }>`
   border: 1px solid transparent;
   box-sizing: border-box;
   padding: 10px;
@@ -59,6 +57,10 @@ const DayTitle = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  ${({ isCurrentDay }) => isCurrentDay && css`
+    background-color: #79c6c6;
+  `}
 `;
 
 const DayOfWeek = styled.button<{ isWeekend: boolean }>`
@@ -212,6 +214,7 @@ export const Day: FunctionComponent<DayProps> = ({
       isCurrentDay={isCurrentDay}
     >
       <DayTitle
+        isCurrentDay={isCurrentDay}
         onClick={onDayClick}
       >
         <DayOfWeek
