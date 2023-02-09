@@ -3,6 +3,7 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
+import { MONTH_NAMES } from '../constants/MONTH';
 import {
   selectCurrentDate,
   selectFormat,
@@ -10,7 +11,7 @@ import {
   setIntervalCalendar,
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { FormatKeys, FormatValue } from '../type/FormatType';
+// import { FormatKeys, FormatValue } from '../type/FormatType';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -28,21 +29,35 @@ export const Controls: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
   const format = useAppSelector(selectFormat);
+  const fullNameMonth = MONTH_NAMES[new Date(currentDate).getMonth()];
+  const fullYear = new Date(currentDate).getFullYear();
 
-  const onChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
-    const formatValue = e.target.value as FormatValue;
+  // const onChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+  //   const formatValue = e.target.value as FormatValue;
 
-    dispatch(setFormat(formatValue));
-    dispatch(setIntervalCalendar());
-  };
+  //   dispatch(setFormat(formatValue));
+  //   dispatch(setIntervalCalendar());
+  // };
 
   const onGoToPrevFormat = () => {
     // eslint-disable-next-line no-console
     console.log('onGoToPrevFormat');
-  };
 
-  // eslint-disable-next-line no-console
-  console.log('Control/ format ---------------', format);
+    switch (format) {
+      case FORMAT.DAY:
+      case FORMAT.WEEK:
+        dispatch(setFormat(FORMAT.MONTH));
+        break;
+
+      case FORMAT.MONTH:
+        dispatch(setFormat(FORMAT.YEAR));
+        break;
+
+      default:
+    }
+
+    dispatch(setIntervalCalendar());
+  };
 
   return (
     <Wrapper>
@@ -50,12 +65,13 @@ export const Controls: FunctionComponent = () => {
         format={format}
         onClick={onGoToPrevFormat}
       >
-        {new Date(currentDate).toDateString()}
+        {/* {new Date(currentDate).toDateString()} */}
+        {(format === FORMAT.DAY || format === FORMAT.WEEK) && fullNameMonth}
+        {format === FORMAT.MONTH && fullYear}
       </Back>
 
-      <select
+      {/* <select
         value={format}
-        defaultValue={format}
         onChange={onChange}
       >
         {Object.keys(FORMAT).map((item) => {
@@ -70,7 +86,7 @@ export const Controls: FunctionComponent = () => {
             </option>
           );
         })}
-      </select>
+      </select> */}
     </Wrapper>
   );
 };

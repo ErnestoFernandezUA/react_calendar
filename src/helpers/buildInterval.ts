@@ -3,10 +3,10 @@ export function buildInterval(start: number, end: number) {
   let day = start;
 
   // eslint-disable-next-line no-console
-  console.log('buildInterval//',
-    new Date(start).toDateString(),
-    '-----------',
-    new Date(end).toDateString());
+  // console.log('buildInterval//',
+  //   new Date(start).toDateString(),
+  //   '-----------',
+  //   new Date(end).toDateString());
 
   while (day < end) {
     interval.push(day);
