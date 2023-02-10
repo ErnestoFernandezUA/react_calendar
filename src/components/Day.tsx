@@ -34,6 +34,10 @@ const Wrapper = styled.div<WrapperType>`
 
   ${({ format }) => (format === FORMAT.WEEK || format === FORMAT.MONTH) && css`
     height: 200px;
+
+    &:hover{
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
   `}
 
   ${({ format, isWeekend }) => (format === FORMAT.YEAR && isWeekend) && css`
@@ -44,14 +48,13 @@ const Wrapper = styled.div<WrapperType>`
     opacity: 0.4;
   `}
 
-
-
+  ${({ isCurrentDay }) => isCurrentDay && css`
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  `}
 `;
 
 const DayTitle = styled.div<{ isCurrentDay: boolean }>`
-  border: 1px solid transparent;
   box-sizing: border-box;
-  padding: 10px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -62,31 +65,50 @@ const DayTitle = styled.div<{ isCurrentDay: boolean }>`
     background-color: #79c6c6;
   `}
 
-  &:hover {
-    background-color: #e6e6e6;
-  }
+  ${({ isCurrentDay }) => !isCurrentDay && css`
+    &:hover {
+      background-color: #e6e6e6;
+    }
+  `}
 `;
 
-const DayOfWeek = styled.button<{ isWeekend: boolean }>`
-  border: none;
+const DayOfWeek = styled.button<{ isWeekend: boolean, isCurrentDay?: boolean }>`
   background-color: transparent;
   cursor: pointer;
+  padding: 0 10px;
+  line-height: 30px;
+  border: none;
+  outline: none;
+  position: relative;
+  cursor: pointer;
+  text-align: left;
 
- ${({ isWeekend }) => {
-    if (isWeekend) {
-      return css`
-        color: #a16e73;
-        font-weight: bold;
-      `;
+  border-right: 10px solid transparent;
+  width: 80px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+
+  ${({ isWeekend }) => isWeekend && css`
+    color: #a16e73;
+    font-weight: bold;
+  `}
+
+
+  ${({ isCurrentDay }) => !isCurrentDay && css`
+    &:hover {
+      transition: all 0.2s;
+      border-bottom: 10px solid #79c6c6;
     }
-
-    return '';
-  }}
+  `}
 `;
 
 const DateString = styled.p<{ format?: string }>`
-  padding: 0;
   margin: 0;
+  line-height: 40px;
+  position: relative;
+  overflow: hidden;
+  padding: 0 10px;
+
   ${({ format }) => format === FORMAT.YEAR && css`
     display: block;
     text-align: right;
@@ -189,8 +211,12 @@ export const Day: FunctionComponent<DayProps> = ({
   };
 
   const onWeekClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
   ) => {
+    // eslint-disable-next-line no-console
+    console.log('onWeek', e.target instanceof HTMLButtonElement, e);
+    e.stopPropagation();
+
     let dayValue: string | undefined;
 
     if (e.target instanceof HTMLButtonElement) {
@@ -222,12 +248,10 @@ export const Day: FunctionComponent<DayProps> = ({
         onClick={onDayClick}
       >
         <DayOfWeek
-          // value={String(startDay)}
-          // name={String(startDay)}
-          // dataValue={String(startDay)}
           isWeekend={isWeekend}
           onClick={(e) => onWeekClick(e)}
           data-day-value={String(startDay)}
+          isCurrentDay={isCurrentDay}
         >
           {format === FORMAT.DAY && fullNameDayOfWeek}
           {(format === FORMAT.WEEK || format === FORMAT.MONTH) && dayOfWeek}

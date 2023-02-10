@@ -2,13 +2,10 @@ import {
   FunctionComponent,
 } from 'react';
 import styled from 'styled-components';
-// import { IoCaretBackOutline, IoCaretForwardOutline } from 'react-icons/io5';
 
 import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
 import {
-  // navigateMonth,
-  // navigateYear,
   selectCurrentDate,
   selectFormat,
   setFormat,
@@ -16,7 +13,7 @@ import {
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { DatePicker } from './DatePicker';
-// import { FormatKeys, FormatValue } from '../type/FormatType';
+import { Form } from './Form';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -24,6 +21,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 10px;
 `;
 
 const Back = styled.div<{ format: string }>`
@@ -105,6 +103,8 @@ export const Controls: FunctionComponent = () => {
         {(format === FORMAT.DAY || format === FORMAT.WEEK) && fullNameMonth}
         {(format === FORMAT.MONTH || format === FORMAT.YEAR) && fullYear}
       </Back>
+
+      <Form />
 
       {/* <select
         value={format}

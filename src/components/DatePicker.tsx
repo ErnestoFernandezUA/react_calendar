@@ -24,6 +24,7 @@ import {
 } from '../store/features/Controls/controlsSlice';
 import { POPUP } from '../constants/POPUP';
 import { MOVE } from '../constants/MOVE';
+import { Button } from '../UI/Button';
 
 const Wrapper = styled.div`
   position: relative;
@@ -70,15 +71,6 @@ const DatePickerContainer = styled.div`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
-const Button = styled.button`
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  outline: none;
-  justify-content: center;
-  cursor: pointer;
-`;
-
 export const DatePicker: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
@@ -114,6 +106,7 @@ export const DatePicker: FunctionComponent = () => {
   };
 
   const onShowHandler = () => {
+    setYear('');
     dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
   };
 
@@ -130,6 +123,7 @@ export const DatePicker: FunctionComponent = () => {
       +month,
       1,
     ).valueOf()));
+    dispatch(setFormat(FORMAT.MONTH));
     dispatch(setIntervalCalendar());
     setYear('');
   };
