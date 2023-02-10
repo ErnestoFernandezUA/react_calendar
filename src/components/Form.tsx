@@ -31,7 +31,7 @@ const FormContainer = styled.form`
 export const Form: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const isFormOpen = useAppSelector(selectIsShowAddItem);
-  const [value, setValue] = useState<any>({
+  const [value, setValue] = useState<{ [key: string]: string }>({
     title: '',
     description: '',
     date: '',
