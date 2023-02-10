@@ -15,14 +15,14 @@ import {
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 
-type WrapperType = {
+type StyledProps = {
   format?: string,
   isWeekend?: boolean,
-  isNotCurrentMonth: boolean,
-  isCurrentDay: boolean;
+  isNotCurrentMonth?: boolean,
+  isCurrentDay?: boolean;
 };
 
-const Wrapper = styled.div<WrapperType>`
+const Wrapper = styled.div<StyledProps>`
   box-sizing: border-box;
   padding: 0;
   font-size: 14px;
@@ -72,7 +72,7 @@ const DayTitle = styled.div<{ isCurrentDay: boolean }>`
   `}
 `;
 
-const DayOfWeek = styled.button<{ isWeekend: boolean, isCurrentDay?: boolean }>`
+const DayOfWeek = styled.button<StyledProps>`
   background-color: transparent;
   cursor: pointer;
   padding: 0 10px;
@@ -94,7 +94,8 @@ const DayOfWeek = styled.button<{ isWeekend: boolean, isCurrentDay?: boolean }>`
   `}
 
 
-  ${({ isCurrentDay }) => !isCurrentDay && css`
+  ${({ isCurrentDay, format }) => !isCurrentDay
+  && format !== FORMAT.WEEK && css`
     &:hover {
       transition: all 0.2s;
       border-bottom: 10px solid #79c6c6;
@@ -213,10 +214,11 @@ export const Day: FunctionComponent<DayProps> = ({
   const onWeekClick = (
     e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
   ) => {
-    // eslint-disable-next-line no-console
-    console.log('onWeek', e.target instanceof HTMLButtonElement, e);
-    e.stopPropagation();
+    if (format === FORMAT.WEEK) {
+      return;
+    }
 
+    e.stopPropagation();
     let dayValue: string | undefined;
 
     if (e.target instanceof HTMLButtonElement) {
@@ -252,6 +254,7 @@ export const Day: FunctionComponent<DayProps> = ({
           onClick={(e) => onWeekClick(e)}
           data-day-value={String(startDay)}
           isCurrentDay={isCurrentDay}
+          format={format}
         >
           {format === FORMAT.DAY && fullNameDayOfWeek}
           {(format === FORMAT.WEEK || format === FORMAT.MONTH) && dayOfWeek}

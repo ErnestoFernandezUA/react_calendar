@@ -1,4 +1,8 @@
-import { ChangeEvent, FunctionComponent, useState } from 'react';
+import {
+  ChangeEvent,
+  FunctionComponent,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import { POPUP } from '../constants/POPUP';
 import {
@@ -9,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Button } from '../UI/Button';
 
 const Wrapper = styled.div`
-  position: relative;
+  position: a;
   background-color: white;
   z-index: 150;
 `;
@@ -24,7 +28,6 @@ const FormContainer = styled.form`
   width: 400px;
   box-sizing: border-box;
   padding: 20px;
-
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
