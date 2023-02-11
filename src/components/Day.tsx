@@ -1,11 +1,10 @@
 import {
   FunctionComponent,
-  // MouseEvent,
-  // useEffect,
 } from 'react';
 import styled, { css } from 'styled-components';
 import { FORMAT } from '../constants/FORMAT';
-import { WEEK } from '../constants/WEEK';
+import { useCurrentHook } from '../customHooks/useCurrentHook';
+import { useDayHook } from '../customHooks/useDayHook';
 import {
   selectCurrentDate,
   selectFormat,
@@ -118,6 +117,8 @@ const DateString = styled.p<{ format?: string }>`
   ${({ format }) => format === FORMAT.YEAR && css`
     display: block;
     text-align: right;
+    padding: 0;
+    margin: 0 auto;
   `}
 `;
 
@@ -141,37 +142,6 @@ interface DayProps {
   // eslint-disable-next-line react/require-default-props
   disabled?: boolean;
 }
-
-const useDayHook = (value: number) => {
-  const date = new Date(value);
-  const day = date.getDate();
-  const arr = date.toDateString().split(' ');
-  const fullNameDayOfWeek = WEEK[date.getDay()];
-
-  return {
-    dayOfWeek: arr[0],
-    month: arr[1],
-    day,
-    year: arr[3],
-    fullNameDayOfWeek,
-  };
-};
-
-const useCurrentHook = (current: number, anyDay: number) => {
-  const isCurrentYear
-  = new Date(current).getFullYear() === new Date(anyDay).getFullYear();
-
-  const isCurrentMonth
-  = new Date(current).getMonth() === new Date(anyDay).getMonth()
-  && new Date(current).getFullYear() === new Date(anyDay).getFullYear();
-
-  const isCurrentDay
-   = new Date(current).getDate() === new Date(anyDay).getDate()
-   && new Date(current).getMonth() === new Date(anyDay).getMonth()
-   && new Date(current).getFullYear() === new Date(anyDay).getFullYear();
-
-  return { isCurrentDay, isCurrentMonth, isCurrentYear };
-};
 
 export const Day: FunctionComponent<DayProps> = ({
   startDay,

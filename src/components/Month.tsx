@@ -4,7 +4,6 @@ import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
 import {
   IS_MONDAY_FIRST_DAY_OF_WEEK,
-  // selectCurrentDate,
   selectFormat,
   setFormat,
   setIntervalCalendar,
@@ -14,8 +13,6 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Day } from './Day';
 
 const Wrapper = styled.div<{ format?: string }>`
-
-
   ${({ format }) => {
     if (format === FORMAT.DAY) {
       return css`
@@ -34,7 +31,6 @@ const Wrapper = styled.div<{ format?: string }>`
 `;
 
 const MonthTitle = styled.div<{ format?: string }>`
-
   cursor: pointer;
 
   ${({ format }) => (format === FORMAT.DAY) && css`
@@ -71,7 +67,6 @@ export const Month: FunctionComponent<MonthProps> = ({ interval }) => {
   const monthName = useRef(new Date(interval[0]).getMonth());
   const countEmptyItem = useRef((new Date(interval[0]).getDay()
   + 7 - IS_MONDAY_FIRST_DAY_OF_WEEK) % 7);
-
   const empty = [];
 
   for (let i = 0; i < countEmptyItem.current; i += 1) {

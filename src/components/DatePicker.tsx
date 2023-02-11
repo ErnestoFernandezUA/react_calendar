@@ -8,7 +8,6 @@ import {
   IoCalendarOutline,
 } from 'react-icons/io5';
 import {
-  IS_MONDAY_FIRST_DAY_OF_WEEK,
   navigateMonth,
   navigateYear,
   selectCurrentDate,
@@ -19,7 +18,7 @@ import {
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { FORMAT } from '../constants/FORMAT';
-import { MONTH_NAMES, MONTH_NAMES_CUT } from '../constants/MONTH';
+import { MONTH_NAMES } from '../constants/MONTH';
 import {
   closeAllPopup,
   selectIsShowDatePicker,
@@ -28,7 +27,9 @@ import {
 import { POPUP } from '../constants/POPUP';
 import { MOVE } from '../constants/MOVE';
 import { Button } from '../UI/Button';
-import { buildInterval } from '../helpers/buildInterval';
+import { buildArrOfMonths } from '../helpers/buildArrOfMonths';
+import { buildArrOfDays } from '../helpers/buildArrOfDays';
+import { buildArrayOfYears } from '../helpers/buildArrayOfYears';
 
 const Wrapper = styled.div`
   position: relative;
@@ -100,72 +101,6 @@ const Days = styled.div`
   }
 `;
 
-const buildArrayOfYears = (currentDate: number) => {
-  const years = [];
-
-  for (let i = 0; i < 12; i += 1) {
-    years.push(
-      new Date(
-        (new Date(currentDate).getFullYear()) - 4 + i,
-        0,
-        0,
-      ).valueOf().toString(),
-    );
-  }
-
-  return years;
-};
-
-const buildArrOfMonths = (currentDate: number) => {
-  const arrOfMonth = [];
-
-  for (let i = 0; i < 12; i += 1) {
-    arrOfMonth.push({
-      label: MONTH_NAMES_CUT[i],
-      value: new Date(
-        (new Date(currentDate).getFullYear()),
-        i,
-        1,
-      ).valueOf().toString(),
-    });
-  }
-
-  return arrOfMonth;
-};
-
-const buildArrOfDays = (startMonth: number) => {
-  const month = [];
-  const values = buildInterval(
-    startMonth,
-    new Date(
-      new Date(startMonth).getFullYear(),
-      new Date(startMonth).getMonth() + 1,
-      1,
-    ).valueOf(),
-  );
-
-  const countEmptyItem = (new Date(startMonth).getDay()
-  + 7 - IS_MONDAY_FIRST_DAY_OF_WEEK) % 7;
-
-  for (let i = 0; i < countEmptyItem; i += 1) {
-    month.push({
-      id: String(i),
-      value: '',
-      label: '',
-    });
-  }
-
-  for (let i = countEmptyItem; i < countEmptyItem + values.length; i += 1) {
-    month.push({
-      id: String(i),
-      value: String(values[i - countEmptyItem]),
-      label: String(new Date(values[i - countEmptyItem]).getDate()),
-    });
-  }
-
-  return month;
-};
-
 export const DatePicker: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
@@ -186,35 +121,14 @@ export const DatePicker: FunctionComponent = () => {
   useEffect(() => {
     const handleClickOutside
     = (event: MouseEvent) => {
-      // eslint-disable-next-line no-console
-      console.log('handleClickOutside');
-
-      // eslint-disable-next-line no-console
-      console.log(controlRef.current
-        && !controlRef.current.contains(event.target as Node));
-
-      // eslint-disable-next-line no-console
-      console.log(formRef.current
-        && !formRef.current.contains(event.target as Node));
-
-      // if (controlRef.current
-      //   && controlRef.current.contains(event.target as Node)) {
-      //   return;
-      // }
-
-      if (formRef.current
-        && !formRef.current.contains(event.target as Node)) {
-        return;
-      }
-
       if (formRef.current
         && !formRef.current.contains(event.target as Node)
         && controlRef.current
         && !controlRef.current.contains(event.target as Node)
       ) {
-        // eslint-disable-next-line no-console
-        console.log('handleClickOutside --------------');
         dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
+        setArrOfMonths([]);
+        setArrOfDays([]);
       }
     };
 
@@ -247,12 +161,14 @@ export const DatePicker: FunctionComponent = () => {
   };
 
   const onYearHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const currentYear = +(e.target as HTMLButtonElement).value;
 
     setArrOfMonths(buildArrOfMonths(currentYear));
   };
 
   const onMonthHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const month = +(e.target as HTMLButtonElement).value;
 
     const currentMonth = new Date(
@@ -265,6 +181,7 @@ export const DatePicker: FunctionComponent = () => {
   };
 
   const onDayHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const day = +(e.target as HTMLButtonElement).value;
 
     dispatch(closeAllPopup());
