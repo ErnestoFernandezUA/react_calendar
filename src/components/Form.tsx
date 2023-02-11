@@ -78,6 +78,10 @@ export const Form: FunctionComponent = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // eslint-disable-next-line no-console
+    console.log('From onSubmit');
+
+    dispatch(switchPopup(POPUP.IS_SHOW_ADD_ITEM));
   };
 
   return (

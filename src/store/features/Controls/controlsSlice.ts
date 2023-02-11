@@ -27,9 +27,6 @@ const controlSlice = createSlice({
       state: ControlState,
       action: PayloadAction<PopupValues>,
     ) => {
-      // eslint-disable-next-line no-console
-      console.log('switchPopup');
-
       state.popup = {
         ...initialState.popup,
         [action.payload]: !state.popup[action.payload],
