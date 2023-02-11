@@ -68,8 +68,6 @@ interface MonthProps {
 export const Month: FunctionComponent<MonthProps> = ({ interval }) => {
   const dispatch = useAppDispatch();
   const format = useAppSelector(selectFormat);
-  // const currentDate = useAppSelector(selectCurrentDate);
-  // const currentMonthName = useRef(new Date(currentDate).getMonth());
   const monthName = useRef(new Date(interval[0]).getMonth());
   const countEmptyItem = useRef((new Date(interval[0]).getDay()
   + 7 - IS_MONDAY_FIRST_DAY_OF_WEEK) % 7);

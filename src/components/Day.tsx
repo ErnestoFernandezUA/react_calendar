@@ -101,6 +101,11 @@ const DayOfWeek = styled.button<StyledProps>`
       border-bottom: 10px solid #79c6c6;
     }
   `}
+
+  ${({ format }) => (format === FORMAT.YEAR)
+  && css`
+    display: none;
+  `}
 `;
 
 const DateString = styled.p<{ format?: string }>`

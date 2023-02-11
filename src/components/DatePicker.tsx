@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   IoCaretBackOutline,
@@ -79,8 +79,10 @@ export const DatePicker: FunctionComponent = () => {
   const fullYear = new Date(currentDate).getFullYear();
   const isShowContainer = useAppSelector(selectIsShowDatePicker);
   const [year, setYear] = useState('');
+  const controlRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
-  const arrYears = [];
+  const arrYears: number[] = [];
 
   for (let i = 0; i < 12; i += 1) {
     arrYears.push(
@@ -91,6 +93,25 @@ export const DatePicker: FunctionComponent = () => {
       ).valueOf(),
     );
   }
+
+  const handleClickOutside
+  = (event: MouseEvent) => {
+    if (formRef.current
+      && !formRef.current.contains(event.target as Node)
+      && controlRef.current
+      && !controlRef.current.contains(event.target as Node)
+    ) {
+      dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (format !== FORMAT.YEAR) {
@@ -130,7 +151,9 @@ export const DatePicker: FunctionComponent = () => {
 
   return (
     <Wrapper>
-      <DatePickerTitle>
+      <DatePickerTitle
+        ref={controlRef}
+      >
         <DatePickerArrow
           type="button"
           value={MOVE.BACK}
@@ -165,7 +188,7 @@ export const DatePicker: FunctionComponent = () => {
       </DatePickerTitle>
 
       {isShowContainer && (
-        <DatePickerContainer>
+        <DatePickerContainer ref={formRef}>
           {!year && arrYears.map(y => (
             <Button
               key={y}

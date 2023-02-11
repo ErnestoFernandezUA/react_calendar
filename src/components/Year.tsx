@@ -1,6 +1,5 @@
 import {
   FunctionComponent,
-  // useRef,
 } from 'react';
 import styled from 'styled-components';
 import { divideYear } from '../helpers/divideYear';

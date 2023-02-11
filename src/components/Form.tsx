@@ -1,6 +1,8 @@
 import {
   ChangeEvent,
   FunctionComponent,
+  useEffect,
+  useRef,
   useState,
 } from 'react';
 import styled from 'styled-components';
@@ -13,16 +15,17 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Button } from '../UI/Button';
 
 const Wrapper = styled.div`
-  position: a;
   background-color: white;
   z-index: 150;
 `;
 
 const FormContainer = styled.form`
-  z-index: 50;
-  position: absolute;
-  left: -50%;
-  top: 45px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: 100;
   background-color: white;
   opacity: 1;
   width: 400px;
@@ -40,6 +43,27 @@ export const Form: FunctionComponent = () => {
     date: '',
     time: '',
   });
+  const formRef = useRef<HTMLFormElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClickOutside
+  = (event: MouseEvent) => {
+    if (formRef.current
+      && !formRef.current.contains(event.target as Node)
+      && buttonRef.current
+      && !buttonRef.current.contains(event.target as Node)
+    ) {
+      dispatch(switchPopup(POPUP.IS_SHOW_ADD_ITEM));
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue({
@@ -59,6 +83,7 @@ export const Form: FunctionComponent = () => {
   return (
     <Wrapper>
       <Button
+        ref={buttonRef}
         onClick={onOpenFormHandler}
       >
         Add new item
@@ -66,41 +91,38 @@ export const Form: FunctionComponent = () => {
 
       {isFormOpen && (
         <FormContainer
+          ref={formRef}
           onSubmit={onSubmit}
+          onClick={e => e.stopPropagation()}
         >
-          {Object.keys(value).map(key => (
-            <div key={key} className="PageForm1__input-container">
-              <label htmlFor={key}>
-                {key}
-                :&nbsp;
-                <input
-                  id={key}
-                  type="text"
-                  name={key}
-                  // value={value[key as keyof FormObject<Keys, string>]}
-                  onChange={onChange}
-                  placeholder={`input ${key}`}
-                />
+          <div>
+            {Object.keys(value).map(key => (
+              <div key={key} className="PageForm1__input-container">
+                <label htmlFor={key}>
+                  {key}
+                  :&nbsp;
+                  <input
+                    id={key}
+                    type="text"
+                    name={key}
+                    // value={value[key as keyof FormObject<Keys, string>]}
+                    onChange={onChange}
+                    placeholder={`input ${key}`}
+                  />
+                </label>
+              </div>
+            ))}
 
-                {/* {showFails[key as keyof FormObject<Keys, string>]
-                  && (
-                    <ul key={key}>
-                      {fails[key as keyof FormObject<Keys, string[]>]!
-                        .map((e: string) => (<li key={e}>{e}</li>))}
-                    </ul>
-                  )} */}
-              </label>
-            </div>
-          ))}
+            <button
+              type="submit"
+              onClick={onSubmit}
+              className="PageForm1__input-submit"
+              // disabled={isLoading}
+            >
+              Submit
+            </button>
 
-          <button
-            type="submit"
-            onClick={onSubmit}
-            className="PageForm1__input-submit"
-            // disabled={isLoading}
-          >
-            Submit
-          </button>
+          </div>
         </FormContainer>
       )}
     </Wrapper>
