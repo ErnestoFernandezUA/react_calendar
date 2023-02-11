@@ -46,18 +46,18 @@ export const Form: FunctionComponent = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handleClickOutside
-  = (event: MouseEvent) => {
-    if (formRef.current
-      && !formRef.current.contains(event.target as Node)
-      && buttonRef.current
-      && !buttonRef.current.contains(event.target as Node)
-    ) {
-      dispatch(switchPopup(POPUP.IS_SHOW_ADD_ITEM));
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside
+    = (event: MouseEvent) => {
+      if (formRef.current
+        && !formRef.current.contains(event.target as Node)
+        && buttonRef.current
+        && !buttonRef.current.contains(event.target as Node)
+      ) {
+        dispatch(switchPopup(POPUP.IS_SHOW_ADD_ITEM));
+      }
+    };
+
     document.addEventListener('click', handleClickOutside);
 
     return () => {

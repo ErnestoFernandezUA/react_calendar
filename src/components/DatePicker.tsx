@@ -64,15 +64,40 @@ const DatePickerContainer = styled.div`
   right: 0;
   top: 45px;
   background-color: white;
-  opacity: 1;
+  /* opacity: 1; */
   width: 400px;
   box-sizing: border-box;
   padding: 20px;
+
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+
+const Years = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   row-gap: 20px;
+  & > :hover{
+    background-color: #e6e6e6;
+  }
+`;
 
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+const Months = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 20px;
+  & > :hover{
+    background-color: #e6e6e6;
+  }
+`;
+
+const Days = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 20px;
+  & > :hover{
+    background-color: #e6e6e6;
+  }
 `;
 
 const buildArrayOfYears = (currentDate: number) => {
@@ -84,7 +109,7 @@ const buildArrayOfYears = (currentDate: number) => {
         (new Date(currentDate).getFullYear()) - 4 + i,
         0,
         0,
-      ).valueOf(),
+      ).valueOf().toString(),
     );
   }
 
@@ -92,45 +117,51 @@ const buildArrayOfYears = (currentDate: number) => {
 };
 
 const buildArrOfMonths = (currentDate: number) => {
-  const year = [];
+  const arrOfMonth = [];
 
   for (let i = 0; i < 12; i += 1) {
-    year.push(
-      new Date(
+    arrOfMonth.push({
+      label: MONTH_NAMES_CUT[i],
+      value: new Date(
         (new Date(currentDate).getFullYear()),
         i,
         1,
-      ).valueOf(),
-    );
+      ).valueOf().toString(),
+    });
   }
 
-  return year;
+  return arrOfMonth;
 };
 
 const buildArrOfDays = (startMonth: number) => {
   const month = [];
-
-  const countEmptyItem = (new Date(startMonth).getDay()
-  + 7 - IS_MONDAY_FIRST_DAY_OF_WEEK) % 7;
-
-  // eslint-disable-next-line no-console
-  console.log(countEmptyItem);
-
-  for (let i = 0; i < countEmptyItem; i += 1) {
-    month.push('');
-  }
-
-  month.push(...buildInterval(
+  const values = buildInterval(
     startMonth,
     new Date(
       new Date(startMonth).getFullYear(),
       new Date(startMonth).getMonth() + 1,
       1,
     ).valueOf(),
-  ).map(d => String(d)));
+  );
 
-  // eslint-disable-next-line no-console
-  console.log(month);
+  const countEmptyItem = (new Date(startMonth).getDay()
+  + 7 - IS_MONDAY_FIRST_DAY_OF_WEEK) % 7;
+
+  for (let i = 0; i < countEmptyItem; i += 1) {
+    month.push({
+      id: String(i),
+      value: '',
+      label: '',
+    });
+  }
+
+  for (let i = countEmptyItem; i < countEmptyItem + values.length; i += 1) {
+    month.push({
+      id: String(i),
+      value: String(values[i - countEmptyItem]),
+      label: String(new Date(values[i - countEmptyItem]).getDate()),
+    });
+  }
 
   return month;
 };
@@ -143,29 +174,36 @@ export const DatePicker: FunctionComponent = () => {
   const fullYear = new Date(currentDate).getFullYear();
   const isShowContainer = useAppSelector(selectIsShowDatePicker);
 
-  const arrOfYears = useRef<number[]>([]);
-  const [year, setYear] = useState('');
-  const arrOfMonths = useRef<number[]>([]);
-  const [month, setMonth] = useState('');
-  const arrOfDays = useRef<string[]>([]);
+  const [arrOfYears, setArrOfYears] = useState<string[]>([]);
+  const [arrOfMonths, setArrOfMonths]
+  = useState<{ label: string, value: string }[]>([]);
+  const [arrOfDays, setArrOfDays]
+  = useState<{ id: string, value: string, label: string }[]>([]);
 
   const controlRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    arrOfYears.current = buildArrayOfYears(currentDate);
-  }, [currentDate]);
-
-  useEffect(() => {
     const handleClickOutside
     = (event: MouseEvent) => {
+      // eslint-disable-next-line no-console
+      console.log('handleClickOutside');
+
+      // eslint-disable-next-line no-console
+      console.log(controlRef.current
+        && controlRef.current.contains(event.target as Node));
+
+      // eslint-disable-next-line no-console
+      console.log(formRef.current
+        && formRef.current.contains(event.target as Node));
+
       if (controlRef.current
         && controlRef.current.contains(event.target as Node)) {
         return;
       }
 
       if (formRef.current
-        && !formRef.current.contains(event.target as Node)) {
+        && formRef.current.contains(event.target as Node)) {
         return;
       }
 
@@ -175,7 +213,7 @@ export const DatePicker: FunctionComponent = () => {
         && !controlRef.current.contains(event.target as Node)
       ) {
         // eslint-disable-next-line no-console
-        console.log('handleClickOutside');
+        console.log('handleClickOutside --------------');
         dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
       }
     };
@@ -186,6 +224,10 @@ export const DatePicker: FunctionComponent = () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    setArrOfYears(buildArrayOfYears(currentDate));
+  }, [currentDate]);
 
   const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (format !== FORMAT.YEAR) {
@@ -201,50 +243,37 @@ export const DatePicker: FunctionComponent = () => {
   };
 
   const onShowHandler = () => {
-    setYear('');
     dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
   };
 
   const onYearHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setYear(e.currentTarget.value);
-    arrOfMonths.current = buildArrOfMonths(+e.currentTarget.value);
+    const currentYear = +(e.target as HTMLButtonElement).value;
+
+    setArrOfMonths(buildArrOfMonths(currentYear));
   };
 
   const onMonthHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const month = +(e.target as HTMLButtonElement).value;
+
     const currentMonth = new Date(
-      new Date(+year).getFullYear(),
-      +e.currentTarget.value,
+      new Date(month).getFullYear(),
+      new Date(month).getMonth(),
       1,
     ).valueOf();
 
-    // eslint-disable-next-line no-console
-    console.log(currentMonth);
-
-    setMonth(String(currentMonth));
-
-    arrOfDays.current.push(...buildArrOfDays(currentMonth));
+    setArrOfDays(buildArrOfDays(currentMonth));
   };
 
   const onDayHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // eslint-disable-next-line no-console
-    console.log(new Date(+month).toDateString());
-
-    const day = e.currentTarget.value;
+    const day = +(e.target as HTMLButtonElement).value;
 
     dispatch(closeAllPopup());
-    dispatch(setSpecialDate(new Date(
-      new Date(+month).getFullYear(),
-      new Date(+month).getMonth(),
-      +day,
-    ).valueOf()));
+    dispatch(setSpecialDate(new Date(day).valueOf()));
     dispatch(setFormat(FORMAT.MONTH));
     dispatch(setIntervalCalendar());
-    setMonth('');
-    setYear('');
+    setArrOfMonths([]);
+    setArrOfDays([]);
   };
-
-  // eslint-disable-next-line no-console
-  console.log('year', year, 'month', month, 'days', arrOfDays.current);
 
   return (
     <Wrapper>
@@ -286,51 +315,55 @@ export const DatePicker: FunctionComponent = () => {
 
       {isShowContainer && (
         <DatePickerContainer ref={formRef}>
-          {arrOfYears.current.length
-          && !arrOfMonths.current.length
-          && !arrOfDays.current.length
-          && arrOfYears.current.map((y:number) => (
-            <Button
-              key={y}
-              type="button"
-              value={String(y)}
-              onClick={e => onYearHandler(e)}
-            >
-              {new Date(y).getFullYear()}
-            </Button>
-          ))}
+          <Years>
+            {arrOfYears.length > 0
+            && arrOfMonths.length === 0
+            && arrOfDays.length === 0
+            && (arrOfYears.map((y:string) => (
+              <Button
+                key={y}
+                type="button"
+                value={y}
+                onClick={e => onYearHandler(e)}
+              >
+                {new Date(+y).getFullYear()}
+              </Button>
+            )))}
+          </Years>
 
-          {arrOfYears.current.length
-          && arrOfMonths.current.length
-          && !arrOfDays.current.length
-          && MONTH_NAMES_CUT.map((m, i) => (
-            <Button
-              key={m}
-              type="button"
-              value={String(arrOfMonths.current[i])}
-              onClick={e => onMonthHandler(e)}
-            >
-              {m}
-            </Button>
-          ))}
+          <Months>
+            {arrOfYears.length > 0
+            && arrOfMonths.length > 0
+            && arrOfDays.length === 0
+            && (arrOfMonths.map((m) => (
+              <Button
+                key={m.label}
+                type="button"
+                value={m.value}
+                onClick={e => onMonthHandler(e)}
+              >
+                {m.label}
+              </Button>
+            )))}
+          </Months>
 
-          {arrOfYears.current.length
-          && arrOfMonths.current.length
-          && arrOfDays.current.length
-          && (
-            <>
-              {arrOfDays.current.map((d: string) => (
+          <Days>
+            {arrOfYears.length > 0
+            && arrOfMonths.length > 0
+            && arrOfDays.length > 0
+            && arrOfDays.map(
+              (d: { id: string, value: string, label: string }) => (
                 <Button
-                  key={Math.random()}
+                  key={d.id}
                   type="button"
-                  value={String(d)}
+                  value={d.value}
                   onClick={e => onDayHandler(e)}
                 >
-                  {d}
+                  {d.label}
                 </Button>
-              ))}
-            </>
-          )}
+              ),
+            )}
+          </Days>
         </DatePickerContainer>
       )}
     </Wrapper>
