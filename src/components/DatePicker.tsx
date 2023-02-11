@@ -191,19 +191,19 @@ export const DatePicker: FunctionComponent = () => {
 
       // eslint-disable-next-line no-console
       console.log(controlRef.current
-        && controlRef.current.contains(event.target as Node));
+        && !controlRef.current.contains(event.target as Node));
 
       // eslint-disable-next-line no-console
       console.log(formRef.current
-        && formRef.current.contains(event.target as Node));
+        && !formRef.current.contains(event.target as Node));
 
-      if (controlRef.current
-        && controlRef.current.contains(event.target as Node)) {
-        return;
-      }
+      // if (controlRef.current
+      //   && controlRef.current.contains(event.target as Node)) {
+      //   return;
+      // }
 
       if (formRef.current
-        && formRef.current.contains(event.target as Node)) {
+        && !formRef.current.contains(event.target as Node)) {
         return;
       }
 
