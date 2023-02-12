@@ -3,29 +3,17 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import {
-  IoCaretBackOutline,
-  IoCaretForwardOutline,
   IoCalendarOutline,
 } from 'react-icons/io5';
 import {
-  navigateMonth,
-  navigateYear,
   selectCurrentDate,
-  selectFormat,
-  setFormat,
-  setIntervalCalendar,
-  setSpecialDate,
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { FORMAT } from '../constants/FORMAT';
-import { MONTH_NAMES } from '../constants/MONTH';
 import {
-  closeAllPopup,
   selectIsShowDatePicker,
   switchPopup,
 } from '../store/features/Controls/controlsSlice';
 import { POPUP } from '../constants/POPUP';
-import { MOVE } from '../constants/MOVE';
 import { Button } from '../UI/Button';
 import { buildArrOfMonths } from '../helpers/buildArrOfMonths';
 import { buildArrOfDays } from '../helpers/buildArrOfDays';
@@ -39,16 +27,6 @@ const DatePickerTitle = styled.div`
   display: flex;
 `;
 
-const DatePickerArrow = styled.button`
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  outline: none;
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
 const DatePickerButton = styled.button`
   border: none;
   background-color: transparent;
@@ -56,7 +34,7 @@ const DatePickerButton = styled.button`
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 100px;
+  margin-left: 40px;
 `;
 
 const DatePickerContainer = styled.div`
@@ -65,12 +43,9 @@ const DatePickerContainer = styled.div`
   right: 0;
   top: 45px;
   background-color: white;
-  /* opacity: 1; */
   width: 400px;
   box-sizing: border-box;
   padding: 20px;
-
-
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
@@ -101,12 +76,19 @@ const Days = styled.div`
   }
 `;
 
-export const DatePicker: FunctionComponent = () => {
+interface DatePickerProps {
+  // eslint-disable-next-line react/require-default-props
+  onChangeDate?: (value: number) => void;
+}
+
+export const DatePicker: FunctionComponent<DatePickerProps> = ({
+  onChangeDate = () => {
+    // eslint-disable-next-line no-console
+    console.log('no function OnChange');
+  },
+}) => {
   const dispatch = useAppDispatch();
   const currentDate = useAppSelector(selectCurrentDate);
-  const format = useAppSelector(selectFormat);
-  const fullNameMonth = MONTH_NAMES[new Date(currentDate).getMonth()];
-  const fullYear = new Date(currentDate).getFullYear();
   const isShowContainer = useAppSelector(selectIsShowDatePicker);
 
   const [arrOfYears, setArrOfYears] = useState<string[]>([]);
@@ -143,19 +125,6 @@ export const DatePicker: FunctionComponent = () => {
     setArrOfYears(buildArrayOfYears(currentDate));
   }, [currentDate]);
 
-  const onNavigateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (format !== FORMAT.YEAR) {
-      dispatch(navigateMonth(e.currentTarget.value));
-      dispatch(setFormat(FORMAT.MONTH));
-    }
-
-    if (format === FORMAT.YEAR) {
-      dispatch(navigateYear(e.currentTarget.value));
-    }
-
-    dispatch(setIntervalCalendar());
-  };
-
   const onShowHandler = () => {
     dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
   };
@@ -184,10 +153,7 @@ export const DatePicker: FunctionComponent = () => {
     e.stopPropagation();
     const day = +(e.target as HTMLButtonElement).value;
 
-    dispatch(closeAllPopup());
-    dispatch(setSpecialDate(new Date(day).valueOf()));
-    dispatch(setFormat(FORMAT.MONTH));
-    dispatch(setIntervalCalendar());
+    onChangeDate(day);
     setArrOfMonths([]);
     setArrOfDays([]);
   };
@@ -197,32 +163,6 @@ export const DatePicker: FunctionComponent = () => {
       <DatePickerTitle
         ref={controlRef}
       >
-        <DatePickerArrow
-          type="button"
-          value={MOVE.BACK}
-          onClick={onNavigateHandler}
-        >
-          <IoCaretBackOutline />
-        </DatePickerArrow>
-
-        {format !== FORMAT.YEAR && (
-          <>
-            &nbsp;
-            {fullNameMonth}
-          </>
-        )}
-        &nbsp;
-        {fullYear}
-        &nbsp;
-
-        <DatePickerArrow
-          type="button"
-          value={MOVE.FORWARD}
-          onClick={onNavigateHandler}
-        >
-          <IoCaretForwardOutline />
-        </DatePickerArrow>
-
         <DatePickerButton
           onClick={onShowHandler}
         >

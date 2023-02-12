@@ -10,8 +10,8 @@ export const buildArrOfDays = (startMonth: number) => {
     new Date(
       new Date(startMonth).getFullYear(),
       new Date(startMonth).getMonth() + 1,
-      1
-    ).valueOf()
+      1,
+    ).valueOf(),
   );
 
   const countEmptyItem = (new Date(startMonth).getDay()
