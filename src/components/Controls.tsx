@@ -5,7 +5,12 @@ import styled from 'styled-components';
 
 import { FORMAT } from '../constants/FORMAT';
 import { MONTH_NAMES } from '../constants/MONTH';
-import { closeAllPopup } from '../store/features/Controls/controlsSlice';
+import { POPUP } from '../constants/POPUP';
+import {
+  closeAllPopup,
+  selectIsShowDatePicker,
+  switchPopup,
+} from '../store/features/Controls/controlsSlice';
 import {
   selectCurrentDate,
   selectFormat,
@@ -43,6 +48,7 @@ export const Controls: FunctionComponent = () => {
   const format = useAppSelector(selectFormat);
   const fullNameMonth = MONTH_NAMES[new Date(currentDate).getMonth()];
   const fullYear = new Date(currentDate).getFullYear();
+  const isShowContainer = useAppSelector(selectIsShowDatePicker);
 
   const onGoToPrevFormat = () => {
     if (format === FORMAT.YEAR) {
@@ -72,6 +78,10 @@ export const Controls: FunctionComponent = () => {
     dispatch(setIntervalCalendar());
   };
 
+  const onShowHandler = () => {
+    dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
+  };
+
   return (
     <Wrapper>
       <Back
@@ -88,7 +98,10 @@ export const Controls: FunctionComponent = () => {
         <ArrowNavigator />
 
         <DatePicker
+          currentDate={currentDate}
           onChangeDate={onChangeCurrentDate}
+          onShow={onShowHandler}
+          isShowContainer={isShowContainer}
         />
       </ControlsNavigate>
     </Wrapper>

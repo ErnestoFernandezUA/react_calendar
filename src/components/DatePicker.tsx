@@ -1,19 +1,16 @@
 import {
-  FunctionComponent, useEffect, useRef, useState,
+  FunctionComponent,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import styled from 'styled-components';
 import {
   IoCalendarOutline,
 } from 'react-icons/io5';
 import {
-  selectCurrentDate,
 } from '../store/features/Interval/intervalSlice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import {
-  selectIsShowDatePicker,
-  switchPopup,
-} from '../store/features/Controls/controlsSlice';
-import { POPUP } from '../constants/POPUP';
 import { Button } from '../UI/Button';
 import { buildArrOfMonths } from '../helpers/buildArrOfMonths';
 import { buildArrOfDays } from '../helpers/buildArrOfDays';
@@ -76,60 +73,71 @@ const Days = styled.div`
   }
 `;
 
-interface DatePickerProps {
-  // eslint-disable-next-line react/require-default-props
-  onChangeDate?: (value: number) => void;
-}
+type DatePickerBoxProps = {
+  currentDate: number;
+  controlRef: RefObject<HTMLDivElement>;
+  isShowContainer: boolean;
+  onChangeDate: (day: number) => void;
+  onShow: () => void;
+};
 
-export const DatePicker: FunctionComponent<DatePickerProps> = ({
-  onChangeDate = () => {
-    // eslint-disable-next-line no-console
-    console.log('no function OnChange');
-  },
+const DatePickerBox: FunctionComponent<DatePickerBoxProps> = ({
+  currentDate,
+  controlRef,
+  isShowContainer,
+  onChangeDate,
+  onShow,
 }) => {
-  const dispatch = useAppDispatch();
-  const currentDate = useAppSelector(selectCurrentDate);
-  const isShowContainer = useAppSelector(selectIsShowDatePicker);
-
   const [arrOfYears, setArrOfYears] = useState<string[]>([]);
   const [arrOfMonths, setArrOfMonths]
   = useState<{ label: string, value: string }[]>([]);
   const [arrOfDays, setArrOfDays]
   = useState<{ id: string, value: string, label: string }[]>([]);
 
-  const controlRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside
-    = (event: MouseEvent) => {
+    = (event:React.MouseEvent<HTMLButtonElement>) => {
       if (formRef.current
         && !formRef.current.contains(event.target as Node)
         && controlRef.current
         && !controlRef.current.contains(event.target as Node)
       ) {
-        dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
+        // eslint-disable-next-line no-console
+        console.log('DatePicker handleClickOutside');
+
+        onShow();
         setArrOfMonths([]);
         setArrOfDays([]);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    // eslint-disable-next-line no-console
+    console.log('mount clicker DP');
+
+    document.addEventListener(
+      'click', (event) => handleClickOutside(event as any),
+    );
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener(
+        'click', (event) => handleClickOutside(event as any),
+      );
     };
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('useEffect DK');
+
     setArrOfYears(buildArrayOfYears(currentDate));
   }, [currentDate]);
 
-  const onShowHandler = () => {
-    dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
-  };
-
   const onYearHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // eslint-disable-next-line no-console
+    console.log('DatePicker// onYearHandler');
+
     e.stopPropagation();
     const currentYear = +(e.target as HTMLButtonElement).value;
 
@@ -159,69 +167,114 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({
   };
 
   return (
+    <>
+      {isShowContainer && (
+        <DatePickerContainer ref={formRef}>
+          {arrOfYears.length > 0
+          && arrOfMonths.length === 0
+          && arrOfDays.length === 0
+          && (
+            <Years>
+              {(arrOfYears.map((y:string) => (
+                <Button
+                  key={y}
+                  type="button"
+                  value={y}
+                  onClick={e => onYearHandler(e)}
+                >
+                  {new Date(+y).getFullYear()}
+                </Button>
+              )))}
+            </Years>
+          )}
+
+          {arrOfYears.length > 0
+          && arrOfMonths.length > 0
+          && arrOfDays.length === 0
+          && (
+            <Months>
+              {(arrOfMonths.map((m) => (
+                <Button
+                  key={m.label}
+                  type="button"
+                  value={m.value}
+                  onClick={e => onMonthHandler(e)}
+                >
+                  {m.label}
+                </Button>
+              )))}
+            </Months>
+          )}
+
+          {arrOfYears.length > 0
+          && arrOfMonths.length > 0
+          && arrOfDays.length > 0
+          && (
+            <Days>
+              {arrOfDays.map(
+                (d: { id: string, value: string, label: string }) => (
+                  <Button
+                    key={d.id}
+                    type="button"
+                    value={d.value}
+                    onClick={e => onDayHandler(e)}
+                  >
+                    {d.label}
+                  </Button>
+                ),
+              )}
+            </Days>
+          )}
+        </DatePickerContainer>
+      )}
+    </>
+  );
+};
+
+interface DatePickerProps {
+  currentDate: number;
+  // eslint-disable-next-line react/require-default-props
+  onChangeDate?: (value: number) => void;
+  isShowContainer: boolean;
+  onShow: () => void;
+}
+
+export const DatePicker: FunctionComponent<DatePickerProps> = ({
+  currentDate,
+  onChangeDate = () => {
+    // eslint-disable-next-line no-console
+    console.log('no function OnChange');
+  },
+  isShowContainer,
+  onShow,
+}) => {
+  const controlRef = useRef<HTMLDivElement>(null);
+
+  const onShowHandler
+  = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // eslint-disable-next-line no-console
+    console.log('DatePicker// onShowHandler');
+
+    e.stopPropagation();
+    onShow();
+  };
+
+  return (
     <Wrapper>
-      <DatePickerTitle
-        ref={controlRef}
-      >
-        <DatePickerButton
-          onClick={onShowHandler}
-        >
+      <DatePickerTitle ref={controlRef}>
+        <DatePickerButton onClick={e => onShowHandler(e)}>
           <IoCalendarOutline size={30} />
         </DatePickerButton>
       </DatePickerTitle>
 
       {isShowContainer && (
-        <DatePickerContainer ref={formRef}>
-          <Years>
-            {arrOfYears.length > 0
-            && arrOfMonths.length === 0
-            && arrOfDays.length === 0
-            && (arrOfYears.map((y:string) => (
-              <Button
-                key={y}
-                type="button"
-                value={y}
-                onClick={e => onYearHandler(e)}
-              >
-                {new Date(+y).getFullYear()}
-              </Button>
-            )))}
-          </Years>
-
-          <Months>
-            {arrOfYears.length > 0
-            && arrOfMonths.length > 0
-            && arrOfDays.length === 0
-            && (arrOfMonths.map((m) => (
-              <Button
-                key={m.label}
-                type="button"
-                value={m.value}
-                onClick={e => onMonthHandler(e)}
-              >
-                {m.label}
-              </Button>
-            )))}
-          </Months>
-
-          <Days>
-            {arrOfYears.length > 0
-            && arrOfMonths.length > 0
-            && arrOfDays.length > 0
-            && arrOfDays.map(
-              (d: { id: string, value: string, label: string }) => (
-                <Button
-                  key={d.id}
-                  type="button"
-                  value={d.value}
-                  onClick={e => onDayHandler(e)}
-                >
-                  {d.label}
-                </Button>
-              ),
-            )}
-          </Days>
-        </DatePickerContainer>
+        <DatePickerBox
+          currentDate={currentDate}
+          controlRef={controlRef}
+          onChangeDate={onChangeDate}
+          isShowContainer={isShowContainer}
+          onShow={onShow}
+        />
       )}
     </Wrapper>
   );
