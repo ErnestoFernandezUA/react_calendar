@@ -20,8 +20,8 @@ import {
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ArrowNavigator } from './ArrowNavigator';
-import { DatePicker } from './DatePicker';
-import { Form } from './Form';
+import { DatePicker } from '../UI/DatePicker';
+import { Form } from '../UI/Form';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -48,7 +48,7 @@ export const Controls: FunctionComponent = () => {
   const format = useAppSelector(selectFormat);
   const fullNameMonth = MONTH_NAMES[new Date(currentDate).getMonth()];
   const fullYear = new Date(currentDate).getFullYear();
-  const isShowContainer = useAppSelector(selectIsShowDatePicker);
+  const isShowDatePickerContainer = useAppSelector(selectIsShowDatePicker);
 
   const onGoToPrevFormat = () => {
     if (format === FORMAT.YEAR) {
@@ -71,14 +71,14 @@ export const Controls: FunctionComponent = () => {
     dispatch(setIntervalCalendar());
   };
 
-  const onChangeCurrentDate = (day: number) => {
+  const onChangeDate = (day: number) => {
     dispatch(closeAllPopup());
     dispatch(setSpecialDate(new Date(day).valueOf()));
     dispatch(setFormat(FORMAT.MONTH));
     dispatch(setIntervalCalendar());
   };
 
-  const onShowHandler = () => {
+  const onShowDatePickerHandler = () => {
     dispatch(switchPopup(POPUP.IS_SHOW_DATE_PICKER));
   };
 
@@ -99,9 +99,9 @@ export const Controls: FunctionComponent = () => {
 
         <DatePicker
           currentDate={currentDate}
-          onChangeDate={onChangeCurrentDate}
-          onShow={onShowHandler}
-          isShowContainer={isShowContainer}
+          onChangeDate={onChangeDate}
+          isShowDatePickerContainer={isShowDatePickerContainer}
+          onShowDatePickerHandler={onShowDatePickerHandler}
         />
       </ControlsNavigate>
     </Wrapper>

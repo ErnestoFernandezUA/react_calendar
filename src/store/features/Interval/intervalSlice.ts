@@ -93,9 +93,9 @@ const intervalSlice = createSlice({
     },
     setIntervalCalendar: (state: IntervalState) => {
       // eslint-disable-next-line no-console
-      console.log('setIntervalCalendar//',
-        'format calendar:', state.formatCalendar,
-        'current date:', new Date(state.currentDate).toDateString());
+      // console.log('setIntervalCalendar//',
+      //   'format calendar:', state.formatCalendar,
+      //   'current date:', new Date(state.currentDate).toDateString());
 
       if (!state.currentDate) {
         // eslint-disable-next-line no-console
@@ -119,9 +119,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          console.log('day start', new Date(state.start).toString());
+          // console.log('day start', new Date(state.start).toString());
           // eslint-disable-next-line no-console
-          console.log('day end', new Date(state.end).toString());
+          // console.log('day end', new Date(state.end).toString());
           break;
 
         case FORMAT.WEEK:
@@ -145,9 +145,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          console.log('week start', new Date(state.start).toDateString());
+          // console.log('week start', new Date(state.start).toDateString());
           // eslint-disable-next-line no-console
-          console.log('week end', new Date(state.end).toDateString());
+          // console.log('week end', new Date(state.end).toDateString());
           break;
 
         case FORMAT.MONTH:
@@ -175,9 +175,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          console.log('start month', new Date(state.start).toString());
+          // console.log('start month', new Date(state.start).toString());
           // eslint-disable-next-line no-console
-          console.log('end month', new Date(state.end).toString());
+          // console.log('end month', new Date(state.end).toString());
 
           break;
 
@@ -195,9 +195,9 @@ const intervalSlice = createSlice({
           ).valueOf();
 
           // eslint-disable-next-line no-console
-          console.log('start year', new Date(state.start).toString());
+          // console.log('start year', new Date(state.start).toString());
           // eslint-disable-next-line no-console
-          console.log('end year', new Date(state.end).toString());
+          // console.log('end year', new Date(state.end).toString());
           break;
 
         default:

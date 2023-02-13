@@ -10,6 +10,7 @@ export interface ControlState {
     isShowDatePicker: boolean;
     isShowAddItem: boolean;
   },
+  isShowDatePickerForm: boolean;
 }
 
 const initialState: ControlState = {
@@ -17,12 +18,18 @@ const initialState: ControlState = {
     isShowDatePicker: false,
     isShowAddItem: false,
   },
+  isShowDatePickerForm: false,
 };
 
 const controlSlice = createSlice({
   name: 'controls',
   initialState,
   reducers: {
+    switchPopupInForm: (
+      state: ControlState,
+    ) => {
+      state.isShowDatePickerForm = !state.isShowDatePickerForm;
+    },
     switchPopup: (
       state: ControlState,
       action: PayloadAction<PopupValues>,
@@ -50,9 +57,12 @@ export const {
   switchPopup,
   closeAllPopup,
   resetState,
+  switchPopupInForm,
 } = controlSlice.actions;
 
 export const selectIsShowDatePicker
  = (state: RootState) => state.control.popup.isShowDatePicker;
 export const selectIsShowAddItem
 = (state: RootState) => state.control.popup.isShowAddItem;
+export const selectIsShowDatePickerInForm
+= (state: RootState) => state.control.isShowDatePickerForm;

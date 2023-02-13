@@ -29,11 +29,11 @@ const Arrow = styled.button`
 `;
 
 const Value = styled.div<{ format: string }>`
-  width: 60px;
+  width: 160px;
 
-  ${({ format }) => format === FORMAT.MONTH
+  ${({ format }) => format === FORMAT.YEAR
     && css`
-      width: 160px;
+      width: 60px;
     `}
 `;
 
