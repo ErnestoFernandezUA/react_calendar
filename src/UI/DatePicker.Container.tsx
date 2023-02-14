@@ -116,6 +116,9 @@ export const DatePickerContainer: FunctionComponent<DatePickerBoxProps> = ({
   };
 
   const onMonthHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // eslint-disable-next-line no-console
+    console.log('DatePicker// onMonthHandler');
+
     e.stopPropagation();
     const month = +(e.target as HTMLButtonElement).value;
 
@@ -129,6 +132,9 @@ export const DatePickerContainer: FunctionComponent<DatePickerBoxProps> = ({
   };
 
   const onDayHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // eslint-disable-next-line no-console
+    console.log('DatePicker// onDayHandler');
+
     e.stopPropagation();
     const day = +(e.target as HTMLButtonElement).value;
 

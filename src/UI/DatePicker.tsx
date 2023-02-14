@@ -43,15 +43,15 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({
 }) => {
   const controlRef = useRef<HTMLDivElement>(null);
 
-  const onShowHandler
-  = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // eslint-disable-next-line no-console
-    console.log(e);
-    // console.log('--------------------------DatePicker// onShowHandler');
+  // const onShowHandler
+  // = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   // eslint-disable-next-line no-console
+  //   console.log(e);
+  //   // console.log('--------------------------DatePicker// onShowHandler');
 
-    // e.stopPropagation();
-    onShowDatePickerHandler();
-  };
+  //   // e.stopPropagation();
+  //   onShowDatePickerHandler();
+  // };
 
   // eslint-disable-next-line no-console
   console.log('isShowDatePickerContainer', isShowDatePickerContainer);
@@ -59,7 +59,7 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({
   return (
     <Wrapper>
       <DatePickerTitle ref={controlRef}>
-        <DatePickerButton onClick={e => onShowHandler(e)}>
+        <DatePickerButton onClick={onShowDatePickerHandler}>
           <IoCalendarOutline size={30} />
         </DatePickerButton>
       </DatePickerTitle>

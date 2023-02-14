@@ -20,7 +20,7 @@ import {
 import { DatePicker } from './DatePicker';
 // import { DatePicker } from './DatePicker';
 
-const Wrapper = styled.form`
+const Wrapper = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -33,6 +33,10 @@ const Wrapper = styled.form`
   box-sizing: border-box;
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+
+const Form = styled.form`
+
 `;
 
 // interface HOCDatePickerProps {
@@ -76,7 +80,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
   // eslint-disable-next-line no-console
   console.log(buttonRef);
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const currentDate = useAppSelector(selectCurrentDate);
   const [isShowDatePickerContainer, setIsShowDatePickerContainer]
   = useState<boolean>(false);
@@ -103,7 +107,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     });
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // eslint-disable-next-line no-console
     console.log('Form onSubmit');
@@ -117,9 +121,14 @@ export const FormContainer: FunctionComponent<FormBodyProps>
       ...value,
       date: String(newDate),
     });
+
+    setIsShowDatePickerContainer(false);
   };
 
   const onShowDatePickerHandler = () => {
+    // eslint-disable-next-line no-console
+    console.log('onShowDatePickerHandler');
+
     setIsShowDatePickerContainer(!isShowDatePickerContainer);
   };
 
@@ -128,14 +137,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
   return (
     <Wrapper ref={formRef}>
-      <DatePicker
-        currentDate={currentDate}
-        onChangeDate={onChangeDate}
-        isShowDatePickerContainer={isShowDatePickerContainer}
-        onShowDatePickerHandler={onShowDatePickerHandler}
-      />
-
-      <div>
+      <Form onSubmit={handleSubmit}>
         {Object.keys(value).map(key => (
           <div key={key}>
             <label htmlFor={key}>
@@ -146,10 +148,12 @@ export const FormContainer: FunctionComponent<FormBodyProps>
                 <>
                   {new Date(+value.date || currentDate).toDateString()}
 
-                  {/* <HOCDatePicker
+                  <DatePicker
                     currentDate={currentDate}
                     onChangeDate={onChangeDate}
-                  /> */}
+                    isShowDatePickerContainer={isShowDatePickerContainer}
+                    onShowDatePickerHandler={onShowDatePickerHandler}
+                  />
                 </>
               ) : (
                 <input
@@ -167,13 +171,11 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
         <button
           type="submit"
-          onClick={onSubmit}
-          // disabled={isLoading}
         >
           Submit
         </button>
 
-      </div>
+      </Form>
     </Wrapper>
   );
 };
