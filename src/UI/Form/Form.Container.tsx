@@ -18,6 +18,7 @@ import {
   useAppSelector,
 } from '../../store/hooks';
 import { DatePicker } from '../DatePicker/DatePicker';
+// import { TimePicker } from '../TimePicker/TimePicker';
 import { TimePicker } from '../TimePicker/TimePicker';
 // import { DatePicker } from './DatePicker';
 
@@ -102,8 +103,8 @@ export const FormContainer: FunctionComponent<FormBodyProps>
   const currentDate = useAppSelector(selectCurrentDate);
   const [isShowDatePickerContainer, setIsShowDatePickerContainer]
   = useState<boolean>(false);
-  const [isShowTimePickerContainer, setIsShowTimePickerContainer]
-  = useState<boolean>(false);
+  // const [isShowTimePickerContainer, setIsShowTimePickerContainer]
+  // = useState<boolean>(false);
 
   useEffect(() => {
     document.addEventListener('click', (event) => handleClickOutside(
@@ -151,16 +152,16 @@ export const FormContainer: FunctionComponent<FormBodyProps>
       [FORM_DATA.TIME]: String(newTime),
     });
 
-    setIsShowTimePickerContainer(false);
+    // setIsShowTimePickerContainer(false);
   };
 
   const onShowDatePickerHandler = () => {
     setIsShowDatePickerContainer(!isShowDatePickerContainer);
   };
 
-  const onShowTimePickerHandler = () => {
-    setIsShowTimePickerContainer(!isShowTimePickerContainer);
-  };
+  // const onShowTimePickerHandler = () => {
+  //   setIsShowTimePickerContainer(!isShowTimePickerContainer);
+  // };
 
   return (
     <Wrapper ref={formRef}>
@@ -187,16 +188,12 @@ export const FormContainer: FunctionComponent<FormBodyProps>
             )}
 
             {key === FORM_DATA.TIME && (
-              <>
-                {new Date(+value.date || currentDate).toDateString()}
-
-                <TimePicker
-                  currentTime={currentDate}
-                  onChangeTime={onChangeTime}
-                  isShowTimePickerContainer={isShowTimePickerContainer}
-                  onShowTimePickerHandler={onShowTimePickerHandler}
-                />
-              </>
+              <TimePicker
+                currentDate={currentDate}
+                onChangeTime={onChangeTime}
+                // isShowTimePickerContainer={isShowTimePickerContainer}
+                // onShowTimePickerHandler={onShowTimePickerHandler} TimePickerControlRef={undefined}
+              />
             )}
 
             {(key !== FORM_DATA.DATE && key !== FORM_DATA.TIME) && (
