@@ -143,7 +143,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     setIsShowDatePickerContainer(false);
   };
 
-  const onChangeTime = (newTime: number) => {
+  const onChangeTime = (newTime: string) => {
     // eslint-disable-next-line no-console
     console.log('onChangeTime');
 
@@ -189,10 +189,8 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
             {key === FORM_DATA.TIME && (
               <TimePicker
-                currentDate={currentDate}
+                time={value[key as FormDataKeys]}
                 onChangeTime={onChangeTime}
-                // isShowTimePickerContainer={isShowTimePickerContainer}
-                // onShowTimePickerHandler={onShowTimePickerHandler} TimePickerControlRef={undefined}
               />
             )}
 

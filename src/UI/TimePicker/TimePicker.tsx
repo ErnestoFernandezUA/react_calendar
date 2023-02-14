@@ -2,12 +2,12 @@ import {
   FunctionComponent,
   // RefObject,
   useEffect,
-  useState,
+  // useState,
 } from 'react';
 import styled from 'styled-components';
 import {
   // IoRefresh,
-  IoCaretDown, IoCaretUp, IoCheckmark,
+  IoCaretDown, IoCaretUp,
 } from 'react-icons/io5';
 
 import {
@@ -16,7 +16,7 @@ import { Button } from '../Button';
 // import { handleClickOutside } from '../../helpers/handleClickOutside';
 
 const Wrapper = styled.div`
-  z-index: 50;
+  /* z-index: 50; */
   /* position: absolute; */
   right: 0;
   top: 45px;
@@ -47,25 +47,22 @@ const Minutes = styled.div`
 `;
 
 type TimePickerBoxProps = {
-  currentDate: number;
-  onChangeTime: (day: number) => void;
-  // TimePickerControlRef: RefObject<HTMLDivElement>;
-  // onShowTimePickerHandler: () => void;
+  time: string;
+  onChangeTime: (time: string) => void;
 };
 
 export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
-  currentDate,
+  time,
   onChangeTime,
-  // TimePickerControlRef,
-  // onShowTimePickerHandler,
 }) => {
-  const [time, setTime] = useState<string>('');
+  // eslint-disable-next-line no-console
+  console.log('', new Date(+time).toDateString());
 
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.log('useEffect TK');
 
-    // setTime(new Date().valueOf().toString());
+    onChangeTime(new Date().valueOf().toString());
   }, []);
 
   const onHourHandler = (
@@ -75,11 +72,12 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
     e.stopPropagation();
     // eslint-disable-next-line no-console
     console.log('onHourHandler', new Date(+time).toDateString());
-    setTime((new Date(
-      new Date(currentDate).getFullYear(),
-      new Date(currentDate).getMonth(),
-      new Date(currentDate).getDate(),
-      new Date(+time).getHours() + value,
+
+    onChangeTime((new Date(
+      new Date(+time).getFullYear(),
+      new Date(+time).getMonth(),
+      new Date(+time).getDate(),
+      (new Date(+time).getHours() + value) % 24,
       new Date(+time).getMinutes(),
     )).valueOf().toString());
   };
@@ -91,32 +89,20 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
     e.stopPropagation();
     // eslint-disable-next-line no-console
     console.log('onHourHandler', new Date(+time).toDateString());
-    setTime((new Date(
-      new Date(currentDate).getFullYear(),
-      new Date(currentDate).getMonth(),
-      new Date(currentDate).getDate(),
+    onChangeTime((new Date(
+      new Date(+time).getFullYear(),
+      new Date(+time).getMonth(),
+      new Date(+time).getDate(),
       new Date(+time).getHours(),
-      new Date(+time).getMinutes() + value,
+      (new Date(+time).getMinutes() + value) % 60,
     )).valueOf().toString());
   };
 
-  const onTimeHandler = () => {
-    const newTime = new Date(
-      new Date(currentDate).getFullYear(),
-      new Date(currentDate).getMonth(),
-      new Date(currentDate).getDate(),
-      new Date(time).getHours(),
-      new Date(time).getMinutes(),
-    ).valueOf();
-
-    onChangeTime(newTime);
-  };
-
-  const hours = new Date(+time).getHours();
-  const minutes = new Date(+time).getMinutes();
+  const hours = (`0${new Date(+time).getHours().toString()}`).slice(-2);
+  const minutes = (`0${new Date(+time).getMinutes()}`).slice(-2);
 
   // eslint-disable-next-line no-console
-  console.log('time', time, Boolean(time));
+  console.log('time', new Date(+time).toTimeString(), Boolean(time));
 
   return (
     <Wrapper>
@@ -128,32 +114,24 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
         <>
           <Hours>
             <Button onClick={(e) => onHourHandler(e, 1)}>
-              <IoCaretUp size={30} />
+              <IoCaretUp />
             </Button>
             {hours}
             <Button onClick={(e) => onHourHandler(e, -1)}>
-              <IoCaretDown size={30} />
+              <IoCaretDown />
             </Button>
           </Hours>
 
           <Minutes>
             <Button onClick={(e) => onMinutesHandler(e, 1)}>
-              <IoCaretUp size={30} />
+              <IoCaretUp />
             </Button>
             {minutes}
 
             <Button onClick={(e) => onMinutesHandler(e, -1)}>
-              <IoCaretDown size={30} />
+              <IoCaretDown />
             </Button>
           </Minutes>
-
-          <Button onClick={onTimeHandler}>
-            <IoCheckmark size={30} />
-          </Button>
-          {/* <Button onClick={onShowTimePickerHandler}>
-            <IoRefresh size={30} />
-          </Button> */}
-
         </>
       )}
     </Wrapper>
