@@ -30,7 +30,7 @@ const Wrapper = styled.div`
   z-index: 100;
   background-color: white;
   opacity: 1;
-  width: 500px;
+  width: 460px;
   box-sizing: border-box;
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -151,7 +151,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
       [FORM_DATA.TIME]: String(newTime),
     });
 
-    setIsShowDatePickerContainer(false);
+    setIsShowTimePickerContainer(false);
   };
 
   const onShowDatePickerHandler = () => {
@@ -174,7 +174,8 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
             {key === FORM_DATA.DATE && (
               <>
-                {new Date(+value.date || currentDate).toDateString()}
+                {new Date(+value[key as FormDataKeys]
+                  || currentDate).toDateString()}
 
                 <DatePicker
                   currentDate={currentDate}

@@ -7,6 +7,10 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import {
+  IoRefresh,
+} from 'react-icons/io5';
+
+import {
 } from '../../store/features/Interval/intervalSlice';
 import { Button } from '../Button';
 import { buildArrOfMonths } from '../../helpers/buildArrOfMonths';
@@ -23,6 +27,9 @@ const Wrapper = styled.div`
   width: 400px;
   box-sizing: border-box;
   padding: 20px;
+
+  display: flex;
+
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
@@ -53,6 +60,16 @@ const Days = styled.div`
   }
 `;
 
+const Hours = styled.div`
+`;
+
+const Minutes = styled.div`
+`;
+
+const RefreshButton = styled.button`
+
+`;
+
 type TimePickerBoxProps = {
   currentTime: number;
   onChangeTime: (day: number) => void;
@@ -66,6 +83,9 @@ export const TimePickerContainer: FunctionComponent<TimePickerBoxProps> = ({
   TimePickerControlRef,
   onShowTimePickerHandler,
 }) => {
+  const [hours, setHours] = useState<string>('');
+  const [minutes, setMinutes] = useState<string>('');
+
   const [arrOfYears, setArrOfYears] = useState<string[]>([]);
   const [arrOfMonths, setArrOfMonths]
   = useState<{ label: string, value: string }[]>([]);
@@ -100,9 +120,11 @@ export const TimePickerContainer: FunctionComponent<TimePickerBoxProps> = ({
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log('useEffect DK');
+    console.log('useEffect TK');
+    setArrOfYears(buildArrayOfYears(new Date().valueOf()));
 
-    setArrOfYears(buildArrayOfYears(currentTime));
+    setHours((new Date()).getHours().toString());
+    setMinutes((new Date()).getMinutes().toString());
   }, []);
 
   const onYearHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -143,9 +165,21 @@ export const TimePickerContainer: FunctionComponent<TimePickerBoxProps> = ({
     setArrOfDays([]);
   };
 
+  const onTimeHandler = () => {
+    const time = new Date(
+      new Date(currentTime).getFullYear(),
+      new Date(currentTime).getMonth(),
+      new Date(currentTime).getDate(),
+      +hours,
+      +minutes,
+    ).valueOf();
+
+    onChangeTime(time);
+  };
+
   return (
     <Wrapper ref={TimePickerContainerRef}>
-      {arrOfYears.length > 0
+      {false && arrOfYears.length > 0
       && arrOfMonths.length === 0
       && arrOfDays.length === 0
       && (
@@ -163,7 +197,7 @@ export const TimePickerContainer: FunctionComponent<TimePickerBoxProps> = ({
         </Years>
       )}
 
-      {arrOfYears.length > 0
+      {false && arrOfYears.length > 0
       && arrOfMonths.length > 0
       && arrOfDays.length === 0
       && (
@@ -181,7 +215,7 @@ export const TimePickerContainer: FunctionComponent<TimePickerBoxProps> = ({
         </Months>
       )}
 
-      {arrOfYears.length > 0
+      {false && arrOfYears.length > 0
       && arrOfMonths.length > 0
       && arrOfDays.length > 0
       && (
@@ -200,6 +234,20 @@ export const TimePickerContainer: FunctionComponent<TimePickerBoxProps> = ({
           )}
         </Days>
       )}
+
+      <Hours>
+        {hours}
+      </Hours>
+      :
+      <Minutes>
+        {minutes}
+      </Minutes>
+
+      <RefreshButton onClick={onShowTimePickerHandler}>
+        <IoRefresh size={30} />
+      </RefreshButton>
+
+      <Button onClick={onTimeHandler}>SetTime</Button>
     </Wrapper>
   );
 };
