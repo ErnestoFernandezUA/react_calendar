@@ -7,18 +7,18 @@ export const handleClickOutside = (
   onShowHandler: () => void,
 ) => {
   // eslint-disable-next-line no-console
-  console.log('start handleClickOutside');
+  // console.log('start handleClickOutside');
 
   if (refControl.current
     && !refControl.current.contains(event.target as Node)) {
     // eslint-disable-next-line no-console
-    console.log('outside refControl', refControl);
+    // console.log('outside refControl', refControl);
   }
 
   if (refContainer.current
     && !refContainer.current.contains(event.target as Node)) {
     // eslint-disable-next-line no-console
-    console.log('outside refContainer', refContainer);
+    // console.log('outside refContainer', refContainer);
   }
 
   if (refControl.current
@@ -26,8 +26,8 @@ export const handleClickOutside = (
     && refContainer.current
     && !refContainer.current.contains(event.target as Node)) {
     // eslint-disable-next-line no-console
-    console.log('outside refControl and refContainer',
-      refControl, refContainer);
+    // console.log('outside refControl and refContainer',
+    // refControl, refContainer);
 
     onShowHandler();
   }

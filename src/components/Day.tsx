@@ -164,7 +164,7 @@ export const Day: FunctionComponent<DayProps> = ({
 
   const onDayClick = () => {
     // eslint-disable-next-line no-console
-    console.log('Day onClick');
+    // console.log('Day onClick');
 
     if (isCurrentDay && format === FORMAT.DAY) {
       return;

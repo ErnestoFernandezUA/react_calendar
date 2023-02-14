@@ -7,12 +7,12 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import {
-} from '../store/features/Interval/intervalSlice';
-import { Button } from './Button';
-import { buildArrOfMonths } from '../helpers/buildArrOfMonths';
-import { buildArrOfDays } from '../helpers/buildArrOfDays';
-import { buildArrayOfYears } from '../helpers/buildArrayOfYears';
-import { handleClickOutside } from '../helpers/handleClickOutside';
+} from '../../store/features/Interval/intervalSlice';
+import { Button } from '../Button';
+import { buildArrOfMonths } from '../../helpers/buildArrOfMonths';
+import { buildArrOfDays } from '../../helpers/buildArrOfDays';
+import { buildArrayOfYears } from '../../helpers/buildArrayOfYears';
+import { handleClickOutside } from '../../helpers/handleClickOutside';
 
 const Wrapper = styled.div`
   z-index: 50;

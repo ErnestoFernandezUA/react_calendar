@@ -7,17 +7,18 @@ import {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import { handleClickOutside } from '../helpers/handleClickOutside';
+import { handleClickOutside } from '../../helpers/handleClickOutside';
 // import { POPUP } from '../constants/POPUP';
 import {
 // switchPopup,
-} from '../store/features/Controls/controlsSlice';
-import { selectCurrentDate } from '../store/features/Interval/intervalSlice';
+} from '../../store/features/Controls/controlsSlice';
+import { selectCurrentDate } from '../../store/features/Interval/intervalSlice';
 import {
   // useAppDispatch,
   useAppSelector,
-} from '../store/hooks';
-import { DatePicker } from './DatePicker';
+} from '../../store/hooks';
+import { DatePicker } from '../DatePicker/DatePicker';
+import { TimePicker } from '../TimePicker/TimePicker';
 // import { DatePicker } from './DatePicker';
 
 const Wrapper = styled.div`
@@ -29,14 +30,26 @@ const Wrapper = styled.div`
   z-index: 100;
   background-color: white;
   opacity: 1;
-  width: 400px;
+  width: 500px;
   box-sizing: border-box;
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
 const Form = styled.form`
+`;
 
+const FormItem = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+
+  & label {
+    width: 150px;
+    text-align: right;
+    padding-right: 10px;
+    box-sizing: border-box;
+  }
 `;
 
 // interface HOCDatePickerProps {
@@ -61,7 +74,14 @@ const Form = styled.form`
 //   );
 // };
 
-type FormData = { [key: string]: string };
+type FormDataKeys = 'title' | 'description' | 'date' | 'time';
+type FormData = { [key in FormDataKeys]: string };
+const FORM_DATA = {
+  TITLE: 'title',
+  DESCRIPTION: 'description',
+  DATE: 'date',
+  TIME: 'time',
+};
 
 interface FormBodyProps {
   buttonRef: RefObject<HTMLButtonElement>;
@@ -78,17 +98,14 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     time: '',
   });
 
-  // eslint-disable-next-line no-console
-  console.log(buttonRef);
   const formRef = useRef<HTMLDivElement>(null);
   const currentDate = useAppSelector(selectCurrentDate);
   const [isShowDatePickerContainer, setIsShowDatePickerContainer]
   = useState<boolean>(false);
+  const [isShowTimePickerContainer, setIsShowTimePickerContainer]
+  = useState<boolean>(false);
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('useEffect mount clicker DP');
-
     document.addEventListener('click', (event) => handleClickOutside(
       event, buttonRef, formRef, onShowFormHandler,
     ));
@@ -115,58 +132,83 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
   const onChangeDate = (newDate: number) => {
     // eslint-disable-next-line no-console
-    console.log('onChangeDate');
+    // console.log('onChangeDate');
 
     setValue({
       ...value,
-      date: String(newDate),
+      [FORM_DATA.DATE]: String(newDate),
+    });
+
+    setIsShowDatePickerContainer(false);
+  };
+
+  const onChangeTime = (newTime: number) => {
+    // eslint-disable-next-line no-console
+    console.log('onChangeTime');
+
+    setValue({
+      ...value,
+      [FORM_DATA.TIME]: String(newTime),
     });
 
     setIsShowDatePickerContainer(false);
   };
 
   const onShowDatePickerHandler = () => {
-    // eslint-disable-next-line no-console
-    console.log('onShowDatePickerHandler');
-
     setIsShowDatePickerContainer(!isShowDatePickerContainer);
   };
 
-  // eslint-disable-next-line no-console
-  console.log('render Form.Container');
+  const onShowTimePickerHandler = () => {
+    setIsShowTimePickerContainer(!isShowTimePickerContainer);
+  };
 
   return (
     <Wrapper ref={formRef}>
       <Form onSubmit={handleSubmit}>
         {Object.keys(value).map(key => (
-          <div key={key}>
+          <FormItem key={key}>
             <label htmlFor={key}>
               {key}
               :&nbsp;
-
-              {key === 'date' ? (
-                <>
-                  {new Date(+value.date || currentDate).toDateString()}
-
-                  <DatePicker
-                    currentDate={currentDate}
-                    onChangeDate={onChangeDate}
-                    isShowDatePickerContainer={isShowDatePickerContainer}
-                    onShowDatePickerHandler={onShowDatePickerHandler}
-                  />
-                </>
-              ) : (
-                <input
-                  id={key}
-                  type="text"
-                  name={key}
-                  value={value[key as keyof FormData]}
-                  onChange={onChange}
-                  placeholder={`input ${key}`}
-                />
-              )}
             </label>
-          </div>
+
+            {key === FORM_DATA.DATE && (
+              <>
+                {new Date(+value.date || currentDate).toDateString()}
+
+                <DatePicker
+                  currentDate={currentDate}
+                  onChangeDate={onChangeDate}
+                  isShowDatePickerContainer={isShowDatePickerContainer}
+                  onShowDatePickerHandler={onShowDatePickerHandler}
+                />
+              </>
+            )}
+
+            {key === FORM_DATA.TIME && (
+              <>
+                {new Date(+value.date || currentDate).toDateString()}
+
+                <TimePicker
+                  currentTime={currentDate}
+                  onChangeTime={onChangeTime}
+                  isShowTimePickerContainer={isShowTimePickerContainer}
+                  onShowTimePickerHandler={onShowTimePickerHandler}
+                />
+              </>
+            )}
+
+            {(key !== FORM_DATA.DATE && key !== FORM_DATA.TIME) && (
+              <input
+                id={key}
+                type="text"
+                name={key}
+                value={value[key as keyof FormData]}
+                onChange={onChange}
+                placeholder={`input ${key}`}
+              />
+            )}
+          </FormItem>
         ))}
 
         <button

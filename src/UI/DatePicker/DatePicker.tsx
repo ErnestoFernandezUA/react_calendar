@@ -7,7 +7,7 @@ import {
   IoCalendarOutline,
 } from 'react-icons/io5';
 import {
-} from '../store/features/Interval/intervalSlice';
+} from '../../store/features/Interval/intervalSlice';
 import { DatePickerContainer } from './DatePicker.Container';
 
 const Wrapper = styled.div`
@@ -42,19 +42,6 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({
   onShowDatePickerHandler,
 }) => {
   const controlRef = useRef<HTMLDivElement>(null);
-
-  // const onShowHandler
-  // = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   // eslint-disable-next-line no-console
-  //   console.log(e);
-  //   // console.log('--------------------------DatePicker// onShowHandler');
-
-  //   // e.stopPropagation();
-  //   onShowDatePickerHandler();
-  // };
-
-  // eslint-disable-next-line no-console
-  console.log('isShowDatePickerContainer', isShowDatePickerContainer);
 
   return (
     <Wrapper>

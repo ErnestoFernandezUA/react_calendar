@@ -99,7 +99,7 @@ const intervalSlice = createSlice({
 
       if (!state.currentDate) {
         // eslint-disable-next-line no-console
-        console.log('break');
+        console.warn('no currentDate in IntervalSlice');
 
         return;
       }

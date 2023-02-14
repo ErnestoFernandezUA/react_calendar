@@ -4,13 +4,13 @@ import {
   useRef,
 } from 'react';
 import styled from 'styled-components';
-import { POPUP } from '../constants/POPUP';
+import { POPUP } from '../../constants/POPUP';
 import {
   selectIsShowAddItem,
   switchPopup,
-} from '../store/features/Controls/controlsSlice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { Button } from './Button';
+} from '../../store/features/Controls/controlsSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { Button } from '../Button';
 import { FormContainer } from './Form.Container';
 
 const Wrapper = styled.div`
@@ -26,9 +26,6 @@ export const Form: FunctionComponent = () => {
   const onShowFormHandler = useCallback(
     () => dispatch(switchPopup(POPUP.IS_SHOW_ADD_ITEM)), [],
   );
-
-  // eslint-disable-next-line no-console
-  console.log('isFormOpen', isFormOpen);
 
   return (
     <Wrapper>

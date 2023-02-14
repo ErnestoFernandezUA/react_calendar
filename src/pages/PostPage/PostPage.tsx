@@ -9,7 +9,7 @@ export const PostPage: FunctionComponent = () => {
   const { id } = useParams();
 
   // eslint-disable-next-line no-console
-  console.log(id);
+  // console.log(id);
 
   const posts = useAppSelector(selectPosts);
   const dispatch = useAppDispatch();

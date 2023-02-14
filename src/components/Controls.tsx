@@ -20,8 +20,8 @@ import {
 } from '../store/features/Interval/intervalSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ArrowNavigator } from './ArrowNavigator';
-import { DatePicker } from '../UI/DatePicker';
-import { Form } from '../UI/Form';
+import { DatePicker } from '../UI/DatePicker/DatePicker';
+import { Form } from '../UI/Form/Form';
 
 const Wrapper = styled.div`
   max-width: 1200px;
