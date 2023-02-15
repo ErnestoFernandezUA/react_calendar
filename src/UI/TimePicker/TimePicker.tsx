@@ -54,7 +54,9 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = memo(({
   onChangeTime,
 }) => {
   // eslint-disable-next-line no-console
-  console.log('Time Picker', new Date(+time).toTimeString());
+  console.log('render Time Picker',
+    new Date(+time).toTimeString(),
+    new Date(+time).toDateString());
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -109,28 +111,34 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = memo(({
   return (
     <Wrapper>
       {!time ? (
-        <Button onClick={(e) => onHourHandler(e, 0)}>
+        <Button
+          type="button"
+          onClick={(e) => onHourHandler(e, 0)}
+        >
           Select time
         </Button>
       ) : (
         <>
           <Hours>
-            <Button onClick={(e) => onHourHandler(e, 1)}>
+            <Button
+              type="button"
+              onClick={(e) => onHourHandler(e, 1)}
+            >
               <IoCaretUp />
             </Button>
             {hours}
-            <Button onClick={(e) => onHourHandler(e, -1)}>
+            <Button type="button" onClick={(e) => onHourHandler(e, -1)}>
               <IoCaretDown />
             </Button>
           </Hours>
 
           <Minutes>
-            <Button onClick={(e) => onMinutesHandler(e, 1)}>
+            <Button type="button" onClick={(e) => onMinutesHandler(e, 1)}>
               <IoCaretUp />
             </Button>
             {minutes}
 
-            <Button onClick={(e) => onMinutesHandler(e, -1)}>
+            <Button type="button" onClick={(e) => onMinutesHandler(e, -1)}>
               <IoCaretDown />
             </Button>
           </Minutes>

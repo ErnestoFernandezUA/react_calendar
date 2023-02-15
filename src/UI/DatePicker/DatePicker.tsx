@@ -46,7 +46,7 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({
   return (
     <Wrapper>
       <DatePickerTitle ref={controlRef}>
-        <DatePickerButton onClick={onShowDatePickerHandler}>
+        <DatePickerButton type="button" onClick={onShowDatePickerHandler}>
           <IoCalendarOutline size={30} />
         </DatePickerButton>
       </DatePickerTitle>

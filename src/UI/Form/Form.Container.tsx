@@ -4,10 +4,12 @@ import {
   RefObject,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 import styled from 'styled-components';
+
 import { FORM_DATA } from '../../constants/FORM_DATA';
 import { handleClickOutside } from '../../helpers/handleClickOutside';
 import {
@@ -17,6 +19,7 @@ import {
   useAppSelector,
 } from '../../store/hooks';
 import { FormDataType } from '../../type/Form';
+import { Button } from '../Button';
 import { DatePicker } from '../DatePicker/DatePicker';
 import { TimePicker } from '../TimePicker/TimePicker';
 
@@ -65,11 +68,13 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     date: '',
     time: '',
   });
+  const [
+    isShowDatePickerContainer,
+    setIsShowDatePickerContainer,
+  ] = useState<boolean>(false);
 
   const formRef = useRef<HTMLDivElement>(null);
   const currentDate = useAppSelector(selectCurrentDate);
-  const [isShowDatePickerContainer, setIsShowDatePickerContainer]
-  = useState<boolean>(false);
   // const [isShowTimePickerContainer, setIsShowTimePickerContainer]
   // = useState<boolean>(false);
 
@@ -103,25 +108,25 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     // eslint-disable-next-line no-console
     // console.log('onChangeDate');
 
-    setValue({
-      ...value,
+    setValue((prevValue: FormDataType) => ({
+      ...prevValue,
       [FORM_DATA.DATE]: String(newDate),
-    });
+    }));
 
     setIsShowDatePickerContainer(false);
-  }, []);
+  }, [value[FORM_DATA.DATE as keyof FormDataType]]);
 
   const onChangeTime = useCallback((newTime: string) => {
     // eslint-disable-next-line no-console
-    console.log('onChangeTime');
+    // console.log('onChangeTime');
 
-    setValue({
-      ...value,
+    setValue((prevValue: FormDataType) => ({
+      ...prevValue,
       [FORM_DATA.TIME]: String(newTime),
-    });
+    }));
 
     // setIsShowTimePickerContainer(false);
-  }, []);
+  }, [value[FORM_DATA.TIME as keyof FormDataType]]);
 
   const onShowDatePickerHandler = () => {
     setIsShowDatePickerContainer(!isShowDatePickerContainer);
@@ -134,10 +139,15 @@ export const FormContainer: FunctionComponent<FormBodyProps>
   const dateValue = new Date(+value[FORM_DATA.DATE as keyof FormDataType]
     || currentDate).toDateString();
 
-  const timeValue = value[FORM_DATA.TIME as keyof FormDataType]
-    ? new Date(+value[FORM_DATA.TIME as keyof FormDataType]
-      || currentDate).toTimeString()
-    : 'no time';
+  const timeValue = useMemo(() => {
+    return value[FORM_DATA.TIME as keyof FormDataType]
+      ? new Date(+value[FORM_DATA.TIME as keyof FormDataType]
+        || currentDate).toTimeString().split(' ')[0]
+      : 'no time';
+  }, [value[FORM_DATA.TIME as keyof FormDataType]]);
+
+  // eslint-disable-next-line no-console
+  console.log('render Form');
 
   return (
     <Wrapper ref={formRef}>
@@ -247,34 +257,15 @@ export const FormContainer: FunctionComponent<FormBodyProps>
             {FORM_DATA.TIME}
             :&nbsp;
           </label>
-          <input
-            id={FORM_DATA.TIME}
-            type="text"
-            name={FORM_DATA.TIME}
-            value={timeValue}
-            onChange={handleChange}
-            placeholder={`input ${FORM_DATA.TIME}`}
-          />
+          {timeValue}
           <TimePicker
             time={value[FORM_DATA.TIME as keyof FormDataType]}
             onChangeTime={onChangeTime}
           />
         </FormItem>
 
-        <input type="submit" value="Submit" />
+        <Button type="submit" value="Submit">Submit</Button>
       </Form>
-
-      {/* <form onSubmit={handleSubmit}>
-        <label>
-          Essay:
-          <textarea
-            value={value.title}
-            onChange={e => handleChange(e)}
-            name="title"
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form> */}
     </Wrapper>
   );
 };
