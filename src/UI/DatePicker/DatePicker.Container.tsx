@@ -143,6 +143,9 @@ export const DatePickerContainer: FunctionComponent<DatePickerBoxProps> = ({
     setArrOfDays([]);
   };
 
+  // eslint-disable-next-line no-console
+  console.log(currentDate);
+
   return (
     <Wrapper ref={datePickerContainerRef}>
       {arrOfYears.length > 0

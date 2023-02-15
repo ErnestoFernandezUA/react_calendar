@@ -5,4 +5,5 @@ export const FORM_DATA: { [key in FormDataKeys]: FormDataValues } = {
   DESCRIPTION: 'description',
   DATE: 'date',
   TIME: 'time',
+  COLOR: 'color',
 };

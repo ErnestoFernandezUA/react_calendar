@@ -19,17 +19,19 @@ import storage from 'redux-persist/lib/storage';
 import postsReducer from './features/Posts/postsSlice';
 import intervalSlice from './features/Interval/intervalSlice';
 import controlsSlice from './features/Controls/controlsSlice';
+import todosSlice from './features/Todo/todoSlice';
 
 const rootReducer = combineReducers({
   posts: postsReducer,
   interval: intervalSlice,
   control: controlsSlice,
+  todos: todosSlice,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['interval'],
+  whitelist: ['interval', 'todos'],
   // blacklist: ['interval'],
 };
 

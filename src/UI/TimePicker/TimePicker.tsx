@@ -90,9 +90,12 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = memo(({
     // eslint-disable-next-line no-console
     // console.log('onHourHandler', new Date(+time).toDateString());
     onChangeTime((new Date(
-      new Date(+time).getFullYear(),
-      new Date(+time).getMonth(),
-      new Date(+time).getDate(),
+      // new Date(+time).getFullYear(),
+      // new Date(+time).getMonth(),
+      // new Date(+time).getDate(),
+      0,
+      0,
+      0,
       new Date(+time).getHours(),
       (new Date(+time).getMinutes() + value) % 60,
     )).valueOf().toString());

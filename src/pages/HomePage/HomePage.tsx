@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { FORMAT } from '../../constants/FORMAT';
 import { Year } from '../../components/Year';
 import { Day } from '../../components/Day';
+import { selectTodos } from '../../store/features/Todo/todoSlice';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -29,6 +30,10 @@ export const HomePage: FunctionComponent = () => {
   const end = useAppSelector(selectEndInterval);
   const interval = buildInterval(start, end);
   const format = useAppSelector(selectFormat);
+  const todos = useAppSelector(selectTodos);
+
+  // eslint-disable-next-line no-console
+  console.log(todos);
 
   useEffect(() => {
     if (!currentDate) {

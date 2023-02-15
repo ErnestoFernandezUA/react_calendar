@@ -1,5 +1,6 @@
 import {
   ChangeEvent,
+  // ChangeEvent,
   FunctionComponent,
   RefObject,
   useCallback,
@@ -10,14 +11,20 @@ import {
 } from 'react';
 import styled from 'styled-components';
 
+import { COLOR } from '../../constants/COLOR';
 import { FORM_DATA } from '../../constants/FORM_DATA';
 import { handleClickOutside } from '../../helpers/handleClickOutside';
 import {
 } from '../../store/features/Controls/controlsSlice';
-import { selectCurrentDate } from '../../store/features/Interval/intervalSlice';
 import {
+  addTodo,
+  selectCurrentDate,
+} from '../../store/features/Interval/intervalSlice';
+import {
+  useAppDispatch,
   useAppSelector,
 } from '../../store/hooks';
+import { ColorKeys } from '../../type/Color';
 import { FormDataType } from '../../type/Form';
 import { Button } from '../Button';
 import { DatePicker } from '../DatePicker/DatePicker';
@@ -62,11 +69,13 @@ interface FormBodyProps {
 
 export const FormContainer: FunctionComponent<FormBodyProps>
 = ({ buttonRef, onShowFormHandler }) => {
+  const dispatch = useAppDispatch();
   const [value, setValue] = useState<FormDataType>({
     title: '',
     description: '',
     date: '',
     time: '',
+    color: 'default',
   });
   const [
     isShowDatePickerContainer,
@@ -83,6 +92,8 @@ export const FormContainer: FunctionComponent<FormBodyProps>
       event, buttonRef, formRef, onShowFormHandler,
     ));
 
+    setValue({ ...value, date: currentDate.toString() });
+
     return () => {
       document.removeEventListener('click', (event) => handleClickOutside(
         event, buttonRef, formRef, onShowFormHandler,
@@ -90,18 +101,29 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     };
   }, []);
 
-  const handleChange
-  = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValue({
-      ...value,
+  const handleChange = useCallback((
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setValue((prevValue) => ({
+      ...prevValue,
       [e.target.name]: e.target.value,
-    });
-  };
+    }));
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // eslint-disable-next-line no-console
     console.log('Form onSubmit');
+
+    // eslint-disable-next-line no-console
+    console.log(value);
+
+    const addTodoItem = {
+      ...value,
+      todoId: `${new Date().valueOf()}`,
+    };
+
+    dispatch(addTodo(addTodoItem));
   };
 
   const onChangeDate = useCallback((newDate: number) => {
@@ -114,7 +136,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     }));
 
     setIsShowDatePickerContainer(false);
-  }, [value[FORM_DATA.DATE as keyof FormDataType]]);
+  }, []);
 
   const onChangeTime = useCallback((newTime: string) => {
     // eslint-disable-next-line no-console
@@ -126,10 +148,10 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     }));
 
     // setIsShowTimePickerContainer(false);
-  }, [value[FORM_DATA.TIME as keyof FormDataType]]);
+  }, []);
 
   const onShowDatePickerHandler = () => {
-    setIsShowDatePickerContainer(!isShowDatePickerContainer);
+    setIsShowDatePickerContainer((prev) => !prev);
   };
 
   // const onShowTimePickerHandler = () => {
@@ -151,62 +173,6 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
   return (
     <Wrapper ref={formRef}>
-      {/* <Form onSubmit={(e) => handleSubmit(e)}>
-        {Object.keys(value).map((key) => {
-          if (key === FORM_DATA.DATE) {
-            return (
-              <FormItem key={key}>
-                <label htmlFor={key}>
-                  {key}
-                  :&nbsp;
-                </label>
-                {new Date(+value[key as FormDataKeys] || currentDate)
-                  .toDateString()}
-                <DatePicker
-                  currentDate={currentDate}
-                  onChangeDate={onChangeDate}
-                  isShowDatePickerContainer={isShowDatePickerContainer}
-                  onShowDatePickerHandler={onShowDatePickerHandler}
-                />
-              </FormItem>
-            );
-          }
-
-          if (key === FORM_DATA.TIME) {
-            return (
-              <FormItem key={key}>
-                <label htmlFor={key}>
-                  {key}
-                  :&nbsp;
-                </label>
-                <TimePicker
-                  time={value[key as FormDataKeys]}
-                  onChangeTime={onChangeTime}
-                />
-              </FormItem>
-            );
-          }
-
-          return (
-            <FormItem key={key}>
-              <label htmlFor={key}>
-                {key}
-                :&nbsp;
-              </label>
-              <input
-                id={key}
-                type="text"
-                name={key}
-                value={value[key as keyof FormData]}
-                onChange={onChange}
-                placeholder={`input ${key}`}
-              />
-            </FormItem>
-          );
-        })}
-        <input type="submit" value="Submit" />
-      </Form> */}
-
       <Form onSubmit={handleSubmit}>
         <FormItem key={FORM_DATA.TITLE}>
           <label htmlFor={FORM_DATA.TITLE}>
@@ -264,7 +230,37 @@ export const FormContainer: FunctionComponent<FormBodyProps>
           />
         </FormItem>
 
-        <Button type="submit" value="Submit">Submit</Button>
+        <FormItem key={FORM_DATA.COLOR}>
+          <label htmlFor={FORM_DATA.COLOR}>
+            {FORM_DATA.COLOR}
+            :&nbsp;
+          </label>
+
+          <select
+            name={FORM_DATA.COLOR}
+            id={FORM_DATA.COLOR}
+            value={value[FORM_DATA.COLOR as keyof FormDataType]}
+            onChange={handleChange}
+          >
+            <option
+              value="default"
+              defaultValue="default"
+              disabled
+            >
+              Chose color
+            </option>
+            {Object.keys(COLOR).map((item) => (
+              <option
+                key={COLOR[item as ColorKeys].value}
+                value={COLOR[item as ColorKeys].value}
+              >
+                {COLOR[item as ColorKeys].label}
+              </option>
+            ))}
+          </select>
+        </FormItem>
+
+        <Button type="submit" value="Submit">Add Todo</Button>
       </Form>
     </Wrapper>
   );

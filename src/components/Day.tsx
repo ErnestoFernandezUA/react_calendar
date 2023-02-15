@@ -12,7 +12,9 @@ import {
   setIntervalCalendar,
   setSpecialDate,
 } from '../store/features/Interval/intervalSlice';
+import { selectTodos } from '../store/features/Todo/todoSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { Todo } from '../type/Todo';
 
 type StyledProps = {
   format?: string,
@@ -159,8 +161,14 @@ export const Day: FunctionComponent<DayProps> = ({
     isCurrentDay,
     isCurrentMonth,
   } = useCurrentHook(currentDate, startDay);
+  const todos = useAppSelector(selectTodos);
 
-  const isTodosToday = false;
+  const preparedTodos = todos.filter((todo: Todo) => {
+    return (startDay <= Number(todo.date) + Number(todo.time))
+    && (Number(todo.date) + Number(todo.time) < startDay + 24 * 60 * 60 * 1000);
+  });
+
+  const isTodosToday = preparedTodos.length;
 
   const onDayClick = () => {
     // eslint-disable-next-line no-console
@@ -242,7 +250,14 @@ export const Day: FunctionComponent<DayProps> = ({
 
       {(format !== FORMAT.YEAR) && (
         <DayListTodos format={format}>
-          {isTodosToday && <p>List of TODOS:</p>}
+          {isTodosToday && (
+            <>
+              <p>List of TODOS:</p>
+              {preparedTodos.map(todo => (
+                <p>{`${todo.title}: ${todo.description}`}</p>
+              ))}
+            </>
+          )}
         </DayListTodos>
       )}
     </Wrapper>
