@@ -2,25 +2,23 @@ import {
   ChangeEvent,
   FunctionComponent,
   RefObject,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
 import styled from 'styled-components';
+import { FORM_DATA } from '../../constants/FORM_DATA';
 import { handleClickOutside } from '../../helpers/handleClickOutside';
-// import { POPUP } from '../constants/POPUP';
 import {
-// switchPopup,
 } from '../../store/features/Controls/controlsSlice';
 import { selectCurrentDate } from '../../store/features/Interval/intervalSlice';
 import {
-  // useAppDispatch,
   useAppSelector,
 } from '../../store/hooks';
+import { FormDataType } from '../../type/Form';
 import { DatePicker } from '../DatePicker/DatePicker';
-// import { TimePicker } from '../TimePicker/TimePicker';
 import { TimePicker } from '../TimePicker/TimePicker';
-// import { DatePicker } from './DatePicker';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -44,6 +42,7 @@ const FormItem = styled.div`
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   & label {
     width: 150px;
@@ -53,37 +52,6 @@ const FormItem = styled.div`
   }
 `;
 
-// interface HOCDatePickerProps {
-//   currentDate: number;
-//   onChangeDate: (value: number) => void;
-// }
-
-// const HOCDatePicker: FunctionComponent<HOCDatePickerProps> = ({
-//   currentDate,
-//   onChangeDate,
-// }) => {
-//   const [isShowDatePicker, setIsShowDatePicker] = useState(false);
-//   const onShowHandlerDatePicker = () => setIsShowDatePicker(!isShowDatePicker);
-
-//   return (
-//     <DatePicker
-//       currentDate={currentDate}
-//       onChangeDate={onChangeDate}
-//       isShowDatePickerContainer={isShowDatePicker}
-//       onShowDatePickerHandler={onShowHandlerDatePicker}
-//     />
-//   );
-// };
-
-type FormDataKeys = 'title' | 'description' | 'date' | 'time';
-type FormData = { [key in FormDataKeys]: string };
-const FORM_DATA = {
-  TITLE: 'title',
-  DESCRIPTION: 'description',
-  DATE: 'date',
-  TIME: 'time',
-};
-
 interface FormBodyProps {
   buttonRef: RefObject<HTMLButtonElement>;
   onShowFormHandler: () => void;
@@ -91,8 +59,7 @@ interface FormBodyProps {
 
 export const FormContainer: FunctionComponent<FormBodyProps>
 = ({ buttonRef, onShowFormHandler }) => {
-  // const dispatch = useAppDispatch();
-  const [value, setValue] = useState<FormData>({
+  const [value, setValue] = useState<FormDataType>({
     title: '',
     description: '',
     date: '',
@@ -118,7 +85,8 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     };
   }, []);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange
+  = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValue({
       ...value,
       [e.target.name]: e.target.value,
@@ -131,7 +99,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     console.log('Form onSubmit');
   };
 
-  const onChangeDate = (newDate: number) => {
+  const onChangeDate = useCallback((newDate: number) => {
     // eslint-disable-next-line no-console
     // console.log('onChangeDate');
 
@@ -141,9 +109,9 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     });
 
     setIsShowDatePickerContainer(false);
-  };
+  }, []);
 
-  const onChangeTime = (newTime: string) => {
+  const onChangeTime = useCallback((newTime: string) => {
     // eslint-disable-next-line no-console
     console.log('onChangeTime');
 
@@ -153,7 +121,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     });
 
     // setIsShowTimePickerContainer(false);
-  };
+  }, []);
 
   const onShowDatePickerHandler = () => {
     setIsShowDatePickerContainer(!isShowDatePickerContainer);
@@ -163,38 +131,58 @@ export const FormContainer: FunctionComponent<FormBodyProps>
   //   setIsShowTimePickerContainer(!isShowTimePickerContainer);
   // };
 
+  const dateValue = new Date(+value[FORM_DATA.DATE as keyof FormDataType]
+    || currentDate).toDateString();
+
+  const timeValue = value[FORM_DATA.TIME as keyof FormDataType]
+    ? new Date(+value[FORM_DATA.TIME as keyof FormDataType]
+      || currentDate).toTimeString()
+    : 'no time';
+
   return (
     <Wrapper ref={formRef}>
-      <Form onSubmit={handleSubmit}>
-        {Object.keys(value).map(key => (
-          <FormItem key={key}>
-            <label htmlFor={key}>
-              {key}
-              :&nbsp;
-            </label>
-
-            {key === FORM_DATA.DATE && (
-              <>
-                {new Date(+value[key as FormDataKeys]
-                  || currentDate).toDateString()}
-
+      {/* <Form onSubmit={(e) => handleSubmit(e)}>
+        {Object.keys(value).map((key) => {
+          if (key === FORM_DATA.DATE) {
+            return (
+              <FormItem key={key}>
+                <label htmlFor={key}>
+                  {key}
+                  :&nbsp;
+                </label>
+                {new Date(+value[key as FormDataKeys] || currentDate)
+                  .toDateString()}
                 <DatePicker
                   currentDate={currentDate}
                   onChangeDate={onChangeDate}
                   isShowDatePickerContainer={isShowDatePickerContainer}
                   onShowDatePickerHandler={onShowDatePickerHandler}
                 />
-              </>
-            )}
+              </FormItem>
+            );
+          }
 
-            {key === FORM_DATA.TIME && (
-              <TimePicker
-                time={value[key as FormDataKeys]}
-                onChangeTime={onChangeTime}
-              />
-            )}
+          if (key === FORM_DATA.TIME) {
+            return (
+              <FormItem key={key}>
+                <label htmlFor={key}>
+                  {key}
+                  :&nbsp;
+                </label>
+                <TimePicker
+                  time={value[key as FormDataKeys]}
+                  onChangeTime={onChangeTime}
+                />
+              </FormItem>
+            );
+          }
 
-            {(key !== FORM_DATA.DATE && key !== FORM_DATA.TIME) && (
+          return (
+            <FormItem key={key}>
+              <label htmlFor={key}>
+                {key}
+                :&nbsp;
+              </label>
               <input
                 id={key}
                 type="text"
@@ -203,17 +191,90 @@ export const FormContainer: FunctionComponent<FormBodyProps>
                 onChange={onChange}
                 placeholder={`input ${key}`}
               />
-            )}
-          </FormItem>
-        ))}
+            </FormItem>
+          );
+        })}
+        <input type="submit" value="Submit" />
+      </Form> */}
 
-        <button
-          type="submit"
-        >
-          Submit
-        </button>
+      <Form onSubmit={handleSubmit}>
+        <FormItem key={FORM_DATA.TITLE}>
+          <label htmlFor={FORM_DATA.TITLE}>
+            {FORM_DATA.TITLE}
+            :&nbsp;
+          </label>
+          <input
+            id={FORM_DATA.TITLE}
+            type="text"
+            name={FORM_DATA.TITLE}
+            value={value[FORM_DATA.TITLE as keyof FormDataType]}
+            onChange={handleChange}
+            placeholder={`input ${FORM_DATA.TITLE}`}
+          />
+        </FormItem>
 
+        <FormItem key={FORM_DATA.DESCRIPTION}>
+          <label htmlFor={FORM_DATA.DESCRIPTION}>
+            {FORM_DATA.DESCRIPTION}
+            :&nbsp;
+          </label>
+          <input
+            id={FORM_DATA.DESCRIPTION}
+            type="text"
+            name={FORM_DATA.DESCRIPTION}
+            value={value[FORM_DATA.DESCRIPTION as keyof FormDataType]}
+            onChange={handleChange}
+            placeholder={`input ${FORM_DATA.DESCRIPTION}`}
+          />
+        </FormItem>
+
+        <FormItem key={FORM_DATA.DATE}>
+          <label htmlFor={FORM_DATA.DATE}>
+            {FORM_DATA.DATE}
+            :&nbsp;
+          </label>
+          {dateValue}
+          <DatePicker
+            currentDate={currentDate}
+            onChangeDate={onChangeDate}
+            isShowDatePickerContainer={isShowDatePickerContainer}
+            onShowDatePickerHandler={onShowDatePickerHandler}
+          />
+        </FormItem>
+
+        <FormItem key={FORM_DATA.TIME}>
+          <label htmlFor={FORM_DATA.TIME}>
+            {FORM_DATA.TIME}
+            :&nbsp;
+          </label>
+          <input
+            id={FORM_DATA.TIME}
+            type="text"
+            name={FORM_DATA.TIME}
+            value={timeValue}
+            onChange={handleChange}
+            placeholder={`input ${FORM_DATA.TIME}`}
+          />
+          <TimePicker
+            time={value[FORM_DATA.TIME as keyof FormDataType]}
+            onChangeTime={onChangeTime}
+          />
+        </FormItem>
+
+        <input type="submit" value="Submit" />
       </Form>
+
+      {/* <form onSubmit={handleSubmit}>
+        <label>
+          Essay:
+          <textarea
+            value={value.title}
+            onChange={e => handleChange(e)}
+            name="title"
+          />
+        </label>
+        <input type="submit" value="Submit" />
+      </form> */}
     </Wrapper>
   );
 };

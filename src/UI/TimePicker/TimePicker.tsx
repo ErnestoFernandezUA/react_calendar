@@ -1,7 +1,9 @@
 import {
   FunctionComponent,
+  memo,
   // RefObject,
   useEffect,
+  useMemo,
   // useState,
 } from 'react';
 import styled from 'styled-components';
@@ -10,18 +12,14 @@ import {
   IoCaretDown, IoCaretUp,
 } from 'react-icons/io5';
 
-import {
-} from '../../store/features/Interval/intervalSlice';
 import { Button } from '../Button';
 // import { handleClickOutside } from '../../helpers/handleClickOutside';
 
 const Wrapper = styled.div`
-  /* z-index: 50; */
-  /* position: absolute; */
   right: 0;
   top: 45px;
   background-color: white;
-  width: 400px;
+  width: 220px;
   box-sizing: border-box;
   padding: 20px;
 
@@ -51,16 +49,16 @@ type TimePickerBoxProps = {
   onChangeTime: (time: string) => void;
 };
 
-export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
+export const TimePicker: FunctionComponent<TimePickerBoxProps> = memo(({
   time,
   onChangeTime,
 }) => {
   // eslint-disable-next-line no-console
-  console.log('', new Date(+time).toDateString());
+  console.log('Time Picker', new Date(+time).toTimeString());
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log('useEffect TK');
+    console.log('useEffect Time Picker');
 
     onChangeTime(new Date().valueOf().toString());
   }, []);
@@ -71,7 +69,7 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
   ) => {
     e.stopPropagation();
     // eslint-disable-next-line no-console
-    console.log('onHourHandler', new Date(+time).toDateString());
+    // console.log('onHourHandler', e, new Date(+time).toDateString());
 
     onChangeTime((new Date(
       new Date(+time).getFullYear(),
@@ -88,7 +86,7 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
   ) => {
     e.stopPropagation();
     // eslint-disable-next-line no-console
-    console.log('onHourHandler', new Date(+time).toDateString());
+    // console.log('onHourHandler', new Date(+time).toDateString());
     onChangeTime((new Date(
       new Date(+time).getFullYear(),
       new Date(+time).getMonth(),
@@ -98,11 +96,15 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
     )).valueOf().toString());
   };
 
-  const hours = (`0${new Date(+time).getHours().toString()}`).slice(-2);
-  const minutes = (`0${new Date(+time).getMinutes()}`).slice(-2);
+  const hours = useMemo(() => {
+    return (`0${new Date(+time).getHours().toString()}`).slice(-2);
+  }, [time]);
+  const minutes = useMemo(() => {
+    return ((`0${new Date(+time).getMinutes()}`).slice(-2));
+  }, [time]);
 
   // eslint-disable-next-line no-console
-  console.log('time', new Date(+time).toTimeString(), Boolean(time));
+  // console.log('time', new Date(+time).toTimeString(), Boolean(time));
 
   return (
     <Wrapper>
@@ -136,4 +138,4 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = ({
       )}
     </Wrapper>
   );
-};
+});
