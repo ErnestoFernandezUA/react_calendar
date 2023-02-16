@@ -1,19 +1,14 @@
 import {
   FunctionComponent,
   memo,
-  // RefObject,
   useEffect,
-  useMemo,
-  // useState,
 } from 'react';
 import styled from 'styled-components';
 import {
-  // IoRefresh,
   IoCaretDown, IoCaretUp,
 } from 'react-icons/io5';
 
 import { Button } from '../Button';
-// import { handleClickOutside } from '../../helpers/handleClickOutside';
 
 const Wrapper = styled.div`
   right: 0;
@@ -45,108 +40,140 @@ const Minutes = styled.div`
 `;
 
 type TimePickerBoxProps = {
-  time: string;
-  onChangeTime: (time: string) => void;
+  time: number;
+  onChangeTime: (time: number) => void;
 };
 
 export const TimePicker: FunctionComponent<TimePickerBoxProps> = memo(({
-  time,
+  time = 0,
   onChangeTime,
 }) => {
   // eslint-disable-next-line no-console
-  console.log('render Time Picker',
-    new Date(+time).toTimeString(),
-    new Date(+time).toDateString());
+  console.log('render Time Picker //',
+    time,
+    new Date(time).toTimeString(),
+    new Date(time).toDateString());
+
+  const onTimeHandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    hour?: number,
+    minute?: number,
+  ) => {
+    e.stopPropagation();
+
+    const newHours = (new Date(time).getHours() + (hour || 0)) % 24;
+    const newMinutes = (new Date(time).getMinutes() + (minute || 0)) % 60;
+
+    // eslint-disable-next-line no-console
+    console.log('newHours = ', newHours);
+    // eslint-disable-next-line no-console
+    console.log('newMinutes = ', newMinutes);
+
+    // eslint-disable-next-line no-console
+    console.log('new time', new Date(
+      (new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        newHours,
+        newMinutes,
+      )).valueOf(),
+    ).toDateString(),
+    (new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate(),
+      (new Date(time).getHours() + (hour || 0)) % 24,
+      (new Date(time).getMinutes() + (minute || 0)) % 60,
+    )).valueOf());
+
+    onChangeTime((new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate(),
+      (new Date(time).getHours() + (hour || 0)) % 24,
+      (new Date(time).getMinutes() + (minute || 0)) % 60,
+    )).valueOf());
+  };
 
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.log('useEffect Time Picker');
 
-    onChangeTime(new Date().valueOf().toString());
+    onChangeTime(new Date().valueOf());
+    // onTimeHandler(undefined, 0, 0);
   }, []);
 
-  const onHourHandler = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    value: number,
-  ) => {
-    e.stopPropagation();
-    // eslint-disable-next-line no-console
-    // console.log('onHourHandler', e, new Date(+time).toDateString());
+  // const onHourHandler = (
+  //   e: React.MouseEvent<HTMLButtonElement>,
+  //   value: number,
+  // ) => {
+  //   e.stopPropagation();
+  //   // eslint-disable-next-line no-console
+  //   // console.log('onHourHandler', e, new Date(+time).toDateString());
 
-    onChangeTime((new Date(
-      new Date(+time).getFullYear(),
-      new Date(+time).getMonth(),
-      new Date(+time).getDate(),
-      (new Date(+time).getHours() + value) % 24,
-      new Date(+time).getMinutes(),
-    )).valueOf().toString());
-  };
+  //   onChangeTime((new Date(
+  //     new Date(time).getFullYear(),
+  //     new Date(time).getMonth(),
+  //     new Date(time).getDate(),
+  //     (new Date(time).getHours() + value) % 24,
+  //     new Date(time).getMinutes(),
+  //   )).valueOf());
+  // };
 
-  const onMinutesHandler = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    value: number,
-  ) => {
-    e.stopPropagation();
-    // eslint-disable-next-line no-console
-    // console.log('onHourHandler', new Date(+time).toDateString());
-    onChangeTime((new Date(
-      // new Date(+time).getFullYear(),
-      // new Date(+time).getMonth(),
-      // new Date(+time).getDate(),
-      0,
-      0,
-      0,
-      new Date(+time).getHours(),
-      (new Date(+time).getMinutes() + value) % 60,
-    )).valueOf().toString());
-  };
+  // const onMinutesHandler = (
+  //   e: React.MouseEvent<HTMLButtonElement>,
+  //   value: number,
+  // ) => {
+  //   e.stopPropagation();
+  //   // eslint-disable-next-line no-console
+  //   // console.log('onHourHandler', new Date(+time).toDateString());
+  //   onChangeTime((new Date(
+  //     // new Date(+time).getFullYear(),
+  //     // new Date(+time).getMonth(),
+  //     // new Date(+time).getDate(),
+  //     0,
+  //     0,
+  //     0,
+  //     new Date(time).getHours(),
+  //     (new Date(time).getMinutes() + value) % 60,
+  //   )).valueOf());
+  // };
 
-  const hours = useMemo(() => {
-    return (`0${new Date(+time).getHours().toString()}`).slice(-2);
-  }, [time]);
-  const minutes = useMemo(() => {
-    return ((`0${new Date(+time).getMinutes()}`).slice(-2));
-  }, [time]);
+  const hours = (`0${new Date(time).getHours().toString()}`).slice(-2);
+  const minutes = (`0${new Date(time).getMinutes()}`).slice(-2);
 
   // eslint-disable-next-line no-console
   // console.log('time', new Date(+time).toTimeString(), Boolean(time));
 
   return (
     <Wrapper>
-      {!time ? (
+      <Hours>
         <Button
           type="button"
-          onClick={(e) => onHourHandler(e, 0)}
+          onClick={(e) => onTimeHandler(e, 1, 0)}
         >
-          Select time
+          <IoCaretUp />
         </Button>
-      ) : (
-        <>
-          <Hours>
-            <Button
-              type="button"
-              onClick={(e) => onHourHandler(e, 1)}
-            >
-              <IoCaretUp />
-            </Button>
-            {hours}
-            <Button type="button" onClick={(e) => onHourHandler(e, -1)}>
-              <IoCaretDown />
-            </Button>
-          </Hours>
 
-          <Minutes>
-            <Button type="button" onClick={(e) => onMinutesHandler(e, 1)}>
-              <IoCaretUp />
-            </Button>
-            {minutes}
+        {hours}
 
-            <Button type="button" onClick={(e) => onMinutesHandler(e, -1)}>
-              <IoCaretDown />
-            </Button>
-          </Minutes>
-        </>
-      )}
+        <Button type="button" onClick={(e) => onTimeHandler(e, -1, 0)}>
+          <IoCaretDown />
+        </Button>
+      </Hours>
+
+      <Minutes>
+        <Button type="button" onClick={(e) => onTimeHandler(e, 0, 1)}>
+          <IoCaretUp />
+        </Button>
+
+        {minutes}
+
+        <Button type="button" onClick={(e) => onTimeHandler(e, 0, -1)}>
+          <IoCaretDown />
+        </Button>
+      </Minutes>
     </Wrapper>
   );
 });

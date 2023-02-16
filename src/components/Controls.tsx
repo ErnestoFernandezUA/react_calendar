@@ -22,6 +22,8 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ArrowNavigator } from './ArrowNavigator';
 import { DatePicker } from '../UI/DatePicker/DatePicker';
 import { Form } from '../UI/Form/Form';
+import { Button } from '../UI/Button';
+import { resetStateTodos } from '../store/features/Todo/todoSlice';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -91,6 +93,10 @@ export const Controls: FunctionComponent = () => {
         {(format === FORMAT.DAY || format === FORMAT.WEEK) && fullNameMonth}
         {(format === FORMAT.MONTH || format === FORMAT.YEAR) && fullYear}
       </Back>
+
+      <Button type="button" onClick={() => dispatch(resetStateTodos())}>
+        reset todos
+      </Button>
 
       <Form />
 

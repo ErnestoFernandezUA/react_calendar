@@ -15,6 +15,7 @@ import {
 import { selectTodos } from '../store/features/Todo/todoSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Todo } from '../type/Todo';
+import { Todos } from './Todos';
 
 type StyledProps = {
   format?: string,
@@ -29,12 +30,17 @@ const Wrapper = styled.div<StyledProps>`
   font-size: 14px;
   cursor: pointer;
 
+
+  /* ${({ format }) => (format !== FORMAT.DAY) && css`
+    max-width: var(1200px / 7);
+  `} */
+
   ${({ format }) => (format === FORMAT.DAY) && css`
     height: 100vh;
   `}
 
   ${({ format }) => (format === FORMAT.WEEK || format === FORMAT.MONTH) && css`
-    height: 200px;
+    height: 205px;
 
     &:hover{
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -127,16 +133,6 @@ const DateString = styled.p<{ format?: string }>`
 const DayListTodos = styled.div<{ format?: string }>`
   box-sizing: border-box;
   padding: 10px;
-
-  ${({ format }) => {
-    if (format === FORMAT.YEAR) {
-      return css`
-        display: none;
-      `;
-    }
-
-    return '';
-  }}
 `;
 
 interface DayProps {
@@ -164,8 +160,8 @@ export const Day: FunctionComponent<DayProps> = ({
   const todos = useAppSelector(selectTodos);
 
   const preparedTodos = todos.filter((todo: Todo) => {
-    return (startDay <= Number(todo.date) + Number(todo.time))
-    && (Number(todo.date) + Number(todo.time) < startDay + 24 * 60 * 60 * 1000);
+    return (startDay <= todo.date)
+    && (todo.date < startDay + 24 * 60 * 60 * 1000);
   });
 
   const isTodosToday = preparedTodos.length;
@@ -221,6 +217,15 @@ export const Day: FunctionComponent<DayProps> = ({
     );
   }
 
+  // eslint-disable-next-line no-console
+  console.log(startDay / 1000,
+    preparedTodos ? preparedTodos.map(
+      // eslint-disable-next-line no-console
+      t => [
+        new Date(t.date).toDateString(), new Date(t.date).toTimeString(),
+      ],
+    ) : 'no todos');
+
   return (
     <Wrapper
       format={format}
@@ -251,12 +256,7 @@ export const Day: FunctionComponent<DayProps> = ({
       {(format !== FORMAT.YEAR) && (
         <DayListTodos format={format}>
           {isTodosToday && (
-            <>
-              <p>List of TODOS:</p>
-              {preparedTodos.map(todo => (
-                <p>{`${todo.title}: ${todo.description}`}</p>
-              ))}
-            </>
+            <Todos todos={preparedTodos} />
           )}
         </DayListTodos>
       )}

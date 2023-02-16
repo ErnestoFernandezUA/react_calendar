@@ -5,13 +5,13 @@ import { RootState } from '../..';
 import { Todo } from '../../../type/Todo';
 import todos from '../../../server/todos.json';
 
-export interface TodoState {
+export interface TodosState {
   storage: Todo[];
   statusLoading: 'idle' | 'loading' | 'failed';
   error: unknown;
 }
 
-const initialState: TodoState = {
+const initialState: TodosState = {
   storage: [],
   statusLoading: 'idle',
   error: null,
@@ -41,26 +41,36 @@ const todosSlice = createSlice({
   name: 'interval',
   initialState,
   reducers: {
-    addTodo: (state: TodoState, action: PayloadAction<Todo>) => {
+    addTodo: (state: TodosState, action: PayloadAction<Todo>) => {
       state.storage.push(action.payload);
     },
+    deleteTodo: (state: TodosState, action: PayloadAction<string>) => {
+      // eslint-disable-next-line no-console
+      console.log('deleteTodos');
+
+      state.storage
+      = state.storage.filter(todo => todo.todoId !== action.payload);
+    },
     setStatus: (
-      state: TodoState,
+      state: TodosState,
       action: PayloadAction<'idle' | 'loading' | 'failed'>,
     ) => {
       state.statusLoading = action.payload;
     },
-    setError: (state: TodoState, action: PayloadAction<unknown>) => {
+    setError: (state: TodosState, action: PayloadAction<unknown>) => {
       state.error = action.payload;
       state.statusLoading = 'failed';
     },
-    resetState: (state: TodoState) => {
-      return { ...state, ...initialState };
+    resetStateTodos: () => {
+      // eslint-disable-next-line no-console
+      console.log('reset todos');
+
+      return initialState;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getTodosAsync.pending, (state: TodoState) => {
+      .addCase(getTodosAsync.pending, (state: TodosState) => {
         state.statusLoading = 'loading';
       })
       .addCase(getTodosAsync.fulfilled, (state, action) => {
@@ -79,9 +89,10 @@ const todosSlice = createSlice({
 export default todosSlice.reducer;
 export const {
   addTodo,
+  deleteTodo,
   setStatus,
   setError,
-  resetState,
+  resetStateTodos,
 } = todosSlice.actions;
 
 export const selectTodos = (state: RootState) => state.todos.storage;

@@ -5,17 +5,18 @@ import {
   RefObject,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
 import styled from 'styled-components';
+import {
+  IoTimeOutline,
+} from 'react-icons/io5';
 
 import { COLOR } from '../../constants/COLOR';
 import { FORM_DATA } from '../../constants/FORM_DATA';
 import { handleClickOutside } from '../../helpers/handleClickOutside';
-import {
-} from '../../store/features/Controls/controlsSlice';
+import { switchPopup } from '../../store/features/Controls/controlsSlice';
 import {
   addTodo,
   selectCurrentDate,
@@ -29,6 +30,7 @@ import { FormDataType } from '../../type/Form';
 import { Button } from '../Button';
 import { DatePicker } from '../DatePicker/DatePicker';
 import { TimePicker } from '../TimePicker/TimePicker';
+import { POPUP } from '../../constants/POPUP';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -84,8 +86,8 @@ export const FormContainer: FunctionComponent<FormBodyProps>
 
   const formRef = useRef<HTMLDivElement>(null);
   const currentDate = useAppSelector(selectCurrentDate);
-  // const [isShowTimePickerContainer, setIsShowTimePickerContainer]
-  // = useState<boolean>(false);
+  const [isShowTimePicker, setIsShowTimePicker]
+  = useState<boolean>(false);
 
   useEffect(() => {
     document.addEventListener('click', (event) => handleClickOutside(
@@ -118,12 +120,25 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     // eslint-disable-next-line no-console
     console.log(value);
 
+    const prepareDate = new Date(
+      new Date(+value[FORM_DATA.DATE]).getFullYear(),
+      new Date(+value[FORM_DATA.DATE]).getMonth(),
+      new Date(+value[FORM_DATA.DATE]).getDate(),
+      new Date(+value[FORM_DATA.TIME]).getHours(),
+      new Date(+value[FORM_DATA.TIME]).getMinutes(),
+    ).valueOf();
+
     const addTodoItem = {
-      ...value,
+      title: value[FORM_DATA.TITLE],
+      description: value[FORM_DATA.DESCRIPTION],
+      date: prepareDate,
+      // time: +value[FORM_DATA.TIME],
+      color: value[FORM_DATA.COLOR],
       todoId: `${new Date().valueOf()}`,
     };
 
     dispatch(addTodo(addTodoItem));
+    dispatch(switchPopup(POPUP.IS_SHOW_ADD_ITEM));
   };
 
   const onChangeDate = useCallback((newDate: number) => {
@@ -138,35 +153,36 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     setIsShowDatePickerContainer(false);
   }, []);
 
-  const onChangeTime = useCallback((newTime: string) => {
+  const onChangeTime = useCallback((newTime: number) => {
     // eslint-disable-next-line no-console
-    // console.log('onChangeTime');
+    console.log('onChangeTime',
+      new Date(newTime).toDateString(),
+      new Date(newTime).toTimeString());
 
     setValue((prevValue: FormDataType) => ({
       ...prevValue,
       [FORM_DATA.TIME]: String(newTime),
     }));
-
-    // setIsShowTimePickerContainer(false);
   }, []);
 
   const onShowDatePickerHandler = () => {
     setIsShowDatePickerContainer((prev) => !prev);
   };
 
-  // const onShowTimePickerHandler = () => {
-  //   setIsShowTimePickerContainer(!isShowTimePickerContainer);
-  // };
+  const onShowTimePickerHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    setIsShowTimePicker(show => !show);
+    onChangeTime(new Date().valueOf());
+  };
 
   const dateValue = new Date(+value[FORM_DATA.DATE as keyof FormDataType]
     || currentDate).toDateString();
 
-  const timeValue = useMemo(() => {
-    return value[FORM_DATA.TIME as keyof FormDataType]
-      ? new Date(+value[FORM_DATA.TIME as keyof FormDataType]
-        || currentDate).toTimeString().split(' ')[0]
-      : 'no time';
-  }, [value[FORM_DATA.TIME as keyof FormDataType]]);
+  // const timeValue = value[FORM_DATA.TIME as keyof FormDataType]
+  //   ? new Date(+value[FORM_DATA.TIME as keyof FormDataType]
+  //     || currentDate).toTimeString().split(' ')[0]
+  //   : 'no time';
 
   // eslint-disable-next-line no-console
   console.log('render Form');
@@ -223,11 +239,21 @@ export const FormContainer: FunctionComponent<FormBodyProps>
             {FORM_DATA.TIME}
             :&nbsp;
           </label>
-          {timeValue}
-          <TimePicker
-            time={value[FORM_DATA.TIME as keyof FormDataType]}
-            onChangeTime={onChangeTime}
-          />
+          {/* {timeValue} */}
+
+          {isShowTimePicker ? (
+            <TimePicker
+              time={+value[FORM_DATA.TIME as keyof FormDataType]}
+              onChangeTime={onChangeTime}
+            />
+          ) : (
+            <Button
+              type="button"
+              onClick={e => onShowTimePickerHandler(e)}
+            >
+              <IoTimeOutline size={30} />
+            </Button>
+          )}
         </FormItem>
 
         <FormItem key={FORM_DATA.COLOR}>
