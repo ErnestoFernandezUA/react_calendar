@@ -253,11 +253,9 @@ export const Day: FunctionComponent<DayProps> = ({
         </DateString>
       </DayTitle>
 
-      {(format !== FORMAT.YEAR) && (
+      {(format !== FORMAT.YEAR) && !!isTodosToday && (
         <DayListTodos format={format}>
-          {isTodosToday && (
-            <Todos todos={preparedTodos} />
-          )}
+          <Todos todos={preparedTodos} />
         </DayListTodos>
       )}
     </Wrapper>
