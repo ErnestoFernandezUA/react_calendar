@@ -77,7 +77,7 @@ export const FormContainer: FunctionComponent<FormBodyProps>
     description: '',
     date: '',
     time: '',
-    color: 'default',
+    color: '',
   });
   const [
     isShowDatePickerContainer,
@@ -132,7 +132,6 @@ export const FormContainer: FunctionComponent<FormBodyProps>
       title: value[FORM_DATA.TITLE],
       description: value[FORM_DATA.DESCRIPTION],
       date: prepareDate,
-      // time: +value[FORM_DATA.TIME],
       color: value[FORM_DATA.COLOR],
       todoId: `${new Date().valueOf()}`,
     };

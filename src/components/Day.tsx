@@ -22,6 +22,7 @@ type StyledProps = {
   isWeekend?: boolean,
   isNotCurrentMonth?: boolean,
   isCurrentDay?: boolean;
+  isTodosToday?: boolean;
 };
 
 const Wrapper = styled.div<StyledProps>`
@@ -29,11 +30,6 @@ const Wrapper = styled.div<StyledProps>`
   padding: 0;
   font-size: 14px;
   cursor: pointer;
-
-
-  /* ${({ format }) => (format !== FORMAT.DAY) && css`
-    max-width: var(1200px / 7);
-  `} */
 
   ${({ format }) => (format === FORMAT.DAY) && css`
     height: 100vh;
@@ -58,6 +54,12 @@ const Wrapper = styled.div<StyledProps>`
   ${({ isCurrentDay }) => isCurrentDay && css`
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   `}
+
+  ${({ isTodosToday, format }) => isTodosToday
+    && format === FORMAT.YEAR
+    && css`
+      background-color: #f3f6f4;
+    `}
 `;
 
 const DayTitle = styled.div<{ isCurrentDay: boolean }>`
@@ -164,7 +166,7 @@ export const Day: FunctionComponent<DayProps> = ({
     && (todo.date < startDay + 24 * 60 * 60 * 1000);
   });
 
-  const isTodosToday = preparedTodos.length;
+  const isTodosToday = !!preparedTodos.length;
 
   const onDayClick = () => {
     // eslint-disable-next-line no-console
@@ -232,6 +234,7 @@ export const Day: FunctionComponent<DayProps> = ({
       isWeekend={isWeekend}
       isNotCurrentMonth={!isCurrentMonth}
       isCurrentDay={isCurrentDay}
+      isTodosToday={isTodosToday}
     >
       <DayTitle
         isCurrentDay={isCurrentDay}
@@ -253,7 +256,7 @@ export const Day: FunctionComponent<DayProps> = ({
         </DateString>
       </DayTitle>
 
-      {(format !== FORMAT.YEAR) && !!isTodosToday && (
+      {(format !== FORMAT.YEAR) && isTodosToday && (
         <DayListTodos format={format}>
           <Todos todos={preparedTodos} />
         </DayListTodos>
