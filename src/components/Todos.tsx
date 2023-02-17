@@ -1,8 +1,13 @@
-import { FunctionComponent } from 'react';
+import {
+  FunctionComponent,
+  useRef,
+} from 'react';
 import styled, { css } from 'styled-components';
 import {
   IoEllipsisHorizontal,
-  IoClose,
+  // IoClose,
+  // IoBuild,
+  IoCart,
 } from 'react-icons/io5';
 
 import { FORMAT } from '../constants/FORMAT';
@@ -11,6 +16,11 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Todo } from '../type/Todo';
 import { Button } from '../UI/Button';
 import { deleteTodo } from '../store/features/Todo/todoSlice';
+import {
+  sentTodoToForm, switchPopup,
+  // switchPopupInForm,
+} from '../store/features/Controls/controlsSlice';
+import { POPUP } from '../constants/POPUP';
 
 const Wrapper = styled.div`
   display: flex;
@@ -71,20 +81,38 @@ interface TodosProps {
 }
 
 export const Todos: FunctionComponent<TodosProps> = ({ todos }) => {
-  // eslint-disable-next-line no-console
-  console.log(todos);
-
   const dispatch = useAppDispatch();
   const format = useAppSelector(selectFormat);
+  const todoRef = useRef<HTMLDivElement>(null);
 
   const preparedTodos = todos.filter(
     (_, i) => ((format === FORMAT.MONTH) ? i < 4 : true),
   );
 
   const isShowDots = (format === FORMAT.MONTH) && todos.length > 4;
+  const onShowFormHandler = (
+    e: React.MouseEvent<HTMLDivElement>,
+    todo: Todo,
+  ) => {
+    // eslint-disable-next-line no-console
+    console.log('onShowFormHandler');
+    e.stopPropagation();
+
+    dispatch(sentTodoToForm(todo));
+    dispatch(switchPopup(POPUP.IS_SHOW_FORM));
+  };
+
+  const deleteTodoHandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    todoId: string,
+  ) => {
+    e.stopPropagation();
+
+    dispatch(deleteTodo(todoId));
+  };
 
   return (
-    <Wrapper>
+    <Wrapper ref={todoRef}>
       {preparedTodos.map(todo => (
         <TodoContainer
           key={todo.todoId}
@@ -92,14 +120,30 @@ export const Todos: FunctionComponent<TodosProps> = ({ todos }) => {
         >
           {(format === FORMAT.MONTH || format === FORMAT.WEEK) && (
             <>
-              <TodoTitle color={todo.color} format={format}>
+              <TodoTitle
+                color={todo.color}
+                format={format}
+                onClick={(e) => onShowFormHandler(e, todo)}
+              >
                 <span>{todo.title}</span>
 
-                <Button
+                {/* <Button
                   type="button"
                   onClick={() => dispatch(deleteTodo(todo.todoId))}
                 >
                   <IoClose />
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => dispatch(deleteTodo(todo.todoId))}
+                >
+                  <IoBuild />
+                </Button> */}
+                <Button
+                  type="button"
+                  onClick={(e) => deleteTodoHandler(e, todo.todoId)}
+                >
+                  <IoCart />
                 </Button>
               </TodoTitle>
             </>
@@ -110,7 +154,6 @@ export const Todos: FunctionComponent<TodosProps> = ({ todos }) => {
               {todo.title}
             </TodoTitle>
           )}
-
         </TodoContainer>
       ))}
 

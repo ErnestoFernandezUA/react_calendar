@@ -21,7 +21,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ArrowNavigator } from './ArrowNavigator';
 import { DatePicker } from '../UI/DatePicker/DatePicker';
-import { Form } from '../UI/Form/Form';
+import { FormParentControl } from '../UI/Form/FormParentControl';
 import { Button } from '../UI/Button';
 import { resetStateTodos } from '../store/features/Todo/todoSlice';
 
@@ -98,7 +98,7 @@ export const Controls: FunctionComponent = () => {
         reset todos
       </Button>
 
-      <Form />
+      <FormParentControl />
 
       <ControlsNavigate>
         <ArrowNavigator />

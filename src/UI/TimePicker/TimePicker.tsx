@@ -104,42 +104,6 @@ export const TimePicker: FunctionComponent<TimePickerBoxProps> = memo(({
     // onTimeHandler(undefined, 0, 0);
   }, []);
 
-  // const onHourHandler = (
-  //   e: React.MouseEvent<HTMLButtonElement>,
-  //   value: number,
-  // ) => {
-  //   e.stopPropagation();
-  //   // eslint-disable-next-line no-console
-  //   // console.log('onHourHandler', e, new Date(+time).toDateString());
-
-  //   onChangeTime((new Date(
-  //     new Date(time).getFullYear(),
-  //     new Date(time).getMonth(),
-  //     new Date(time).getDate(),
-  //     (new Date(time).getHours() + value) % 24,
-  //     new Date(time).getMinutes(),
-  //   )).valueOf());
-  // };
-
-  // const onMinutesHandler = (
-  //   e: React.MouseEvent<HTMLButtonElement>,
-  //   value: number,
-  // ) => {
-  //   e.stopPropagation();
-  //   // eslint-disable-next-line no-console
-  //   // console.log('onHourHandler', new Date(+time).toDateString());
-  //   onChangeTime((new Date(
-  //     // new Date(+time).getFullYear(),
-  //     // new Date(+time).getMonth(),
-  //     // new Date(+time).getDate(),
-  //     0,
-  //     0,
-  //     0,
-  //     new Date(time).getHours(),
-  //     (new Date(time).getMinutes() + value) % 60,
-  //   )).valueOf());
-  // };
-
   const hours = (`0${new Date(time).getHours().toString()}`).slice(-2);
   const minutes = (`0${new Date(time).getMinutes()}`).slice(-2);
 

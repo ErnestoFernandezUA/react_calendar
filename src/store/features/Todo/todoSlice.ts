@@ -44,6 +44,29 @@ const todosSlice = createSlice({
     addTodo: (state: TodosState, action: PayloadAction<Todo>) => {
       state.storage.push(action.payload);
     },
+    changeTodo: (
+      state: TodosState,
+      action: PayloadAction<{ todoId: string, todo: Todo }>,
+    ) => {
+      state.storage = state.storage.map(todo => {
+        if (todo.todoId === action.payload.todoId) {
+          return action.payload.todo;
+        }
+
+        return todo;
+      });
+    },
+    randomizeTodos: (
+      // state: TodosState, action: PayloadAction<Todo>,
+    ) => {
+      // state.storage = state.storage.map(todo => {
+      //   if (todo.todoId === action.payload.todoId) {
+      //     return action.payload;
+      //   }
+
+      //   return todo;
+      // });
+    },
     deleteTodo: (state: TodosState, action: PayloadAction<string>) => {
       // eslint-disable-next-line no-console
       console.log('deleteTodos');
@@ -89,6 +112,7 @@ const todosSlice = createSlice({
 export default todosSlice.reducer;
 export const {
   addTodo,
+  changeTodo,
   deleteTodo,
   setStatus,
   setError,

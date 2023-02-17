@@ -2,32 +2,39 @@ import { RefObject } from 'react';
 
 export const handleClickOutside = (
   event: MouseEvent,
-  refControl: RefObject<Element>,
-  refContainer: RefObject<Element>,
+  refParent: RefObject<Element>,
+  refChild: RefObject<Element>,
   onShowHandler: () => void,
 ) => {
   // eslint-disable-next-line no-console
   // console.log('start handleClickOutside');
+  // if (refParent.current
+  //   && refParent.current.contains(event.target as Node)) {
+  //   // eslint-disable-next-line no-console
+  //   console.log('outside refControl', refParent, refChild);
+  // } else {
+  //   onShowHandler();
+  // }
 
-  if (refControl.current
-    && !refControl.current.contains(event.target as Node)) {
-    // eslint-disable-next-line no-console
-    // console.log('outside refControl', refControl);
-  }
+  // if (refParent.current
+  //   && !refParent.current.contains(event.target as Node)) {
+  //   // eslint-disable-next-line no-console
+  //   console.log('outside refControl', refParent);
+  // }
 
-  if (refContainer.current
-    && !refContainer.current.contains(event.target as Node)) {
-    // eslint-disable-next-line no-console
-    // console.log('outside refContainer', refContainer);
-  }
+  // if (refChild.current
+  //   && !refChild.current.contains(event.target as Node)) {
+  //   // eslint-disable-next-line no-console
+  //   console.log('outside refContainer', refChild);
+  // }
 
-  if (refControl.current
-    && !refControl.current.contains(event.target as Node)
-    && refContainer.current
-    && !refContainer.current.contains(event.target as Node)) {
+  if (refParent.current
+    && !refParent.current.contains(event.target as Node)
+    && refChild.current
+    && !refChild.current.contains(event.target as Node)) {
     // eslint-disable-next-line no-console
-    // console.log('outside refControl and refContainer',
-    // refControl, refContainer);
+    console.log('outside refControl and refContainer',
+      refParent, refChild);
 
     onShowHandler();
   }
