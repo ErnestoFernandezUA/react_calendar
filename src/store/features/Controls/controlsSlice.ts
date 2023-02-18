@@ -58,6 +58,9 @@ const controlSlice = createSlice({
       state.todo = action.payload;
     },
     resetTodo: (state: ControlState) => {
+      // eslint-disable-next-line no-console
+      console.log('reset todo');
+
       state.todo = initialState.todo;
     },
     resetState: (state: ControlState) => {

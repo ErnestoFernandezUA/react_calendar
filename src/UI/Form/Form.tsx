@@ -130,6 +130,11 @@ export const Form: FunctionComponent<FormProps>
         date: currentDate.toString(),
       });
     }
+
+    return () => {
+      setValue(initialValueForm);
+      dispatch(resetTodo());
+    };
   }, []);
 
   const handleChange = useCallback((

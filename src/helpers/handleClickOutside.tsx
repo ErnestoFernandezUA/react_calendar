@@ -7,7 +7,8 @@ export const handleClickOutside = (
   onShowHandler: () => void,
 ) => {
   // eslint-disable-next-line no-console
-  // console.log('start handleClickOutside');
+  console.log('start handleClickOutside');
+
   // if (refParent.current
   //   && refParent.current.contains(event.target as Node)) {
   //   // eslint-disable-next-line no-console
