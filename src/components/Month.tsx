@@ -95,22 +95,17 @@ export const Month: FunctionComponent<MonthProps> = ({ interval }) => {
 
   return (
     <Wrapper format={format}>
-      <MonthTitle
-        format={format}
-      >
+      <MonthTitle format={format}>
         <button
           type="button"
           onClick={e => onMonthHandler(e)}
           data-month-value={String(interval[0])}
         >
           {format === FORMAT.YEAR && MONTH_NAMES[monthName.current]}
-          {/* {format === FORMAT.MONTH && MONTH_NAMES[currentMonthName.current]} */}
         </button>
       </MonthTitle>
 
-      <MonthContainer
-        format={format}
-      >
+      <MonthContainer format={format}>
         {empty.map((emptyItem: number) => (
           <Day key={emptyItem} startDay={emptyItem} disabled />
         ))}

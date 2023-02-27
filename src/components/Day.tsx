@@ -219,15 +219,6 @@ export const Day: FunctionComponent<DayProps> = ({
     );
   }
 
-  // eslint-disable-next-line no-console
-  // console.log(startDay / 1000,
-  //   (preparedTodos.length > 0) ? preparedTodos.map(
-  //     // eslint-disable-next-line no-console
-  //     t => [
-  //       new Date(t.date).toDateString(), new Date(t.date).toTimeString(),
-  //     ],
-  //   ) : 'no todos');
-
   return (
     <Wrapper
       format={format}

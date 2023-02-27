@@ -47,25 +47,48 @@ const Wrapper = styled.div`
   background-color: white;
   opacity: 1;
   width: 460px;
+  height: 400px;
   box-sizing: border-box;
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  & h3 {
+    margin-bottom: 20px;
+  }
 `;
 
 const FormContainer = styled.form`
-`;
+  `;
 
 const FormItem = styled.div`
   margin-bottom: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 
   & label {
-    width: 150px;
+    /* border: 1px solid red; */
+    width: 120px;
     text-align: right;
     padding-right: 10px;
     box-sizing: border-box;
+  }
+
+  & input {
+    width: 300px;
+    text-align: left;
+    padding-right: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid black 0.4;
+
+    ::-webkit-input-placeholder {font-style: italic}
+    :-moz-placeholder {font-style: italic}
+    :-ms-input-placeholder {font-style: italic}
+
+    &:focus, &:active {
+      border: 1px solid red;
+    }
   }
 `;
 
@@ -169,7 +192,6 @@ export const Form: FunctionComponent<FormProps>
 
     if (todo) {
       dispatch(changeTodo({ todoId: todo.todoId, todo: newTodo }));
-      dispatch(resetTodo);
     } else {
       dispatch(addTodo(newTodo));
     }

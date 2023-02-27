@@ -47,8 +47,10 @@ export const HomePage: FunctionComponent = () => {
   return (
     <Wrapper>
       {format === FORMAT.YEAR && <Year interval={interval} />}
+
       {(format === FORMAT.MONTH || format === FORMAT.WEEK)
       && <Month interval={interval} />}
+
       {format === FORMAT.DAY && <Day startDay={interval[0]} />}
     </Wrapper>
   );

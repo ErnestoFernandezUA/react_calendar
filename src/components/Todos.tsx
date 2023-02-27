@@ -127,18 +127,6 @@ export const Todos: FunctionComponent<TodosProps> = ({ todos }) => {
               >
                 <span>{todo.title}</span>
 
-                {/* <Button
-                  type="button"
-                  onClick={() => dispatch(deleteTodo(todo.todoId))}
-                >
-                  <IoClose />
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => dispatch(deleteTodo(todo.todoId))}
-                >
-                  <IoBuild />
-                </Button> */}
                 <Button
                   type="button"
                   onClick={(e) => deleteTodoHandler(e, todo.todoId)}
